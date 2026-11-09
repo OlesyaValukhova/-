@@ -12,6 +12,35 @@ from parse_navigator import URL
 
 
 class DetailsRecoveryTests(unittest.TestCase):
+    def test_explicit_pilot_reuses_only_selected_cached_cards(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            source = root / 'pages.json'
+            source.write_text(json.dumps({'pages': [{'url': URL, 'response': {
+                'count': 3, 'results': [{'id': i} for i in [1, 2, 3]],
+                'next': None, 'previous': None}}]}), encoding='utf-8')
+            ids = root / 'ids.json'
+            ids.write_text('[2, 3]', encoding='utf-8')
+            cached = root / 'cached'
+            cached.mkdir()
+            (cached / '2-detail.json').write_text('{"id": 2}', encoding='utf-8')
+            output = root / 'output'
+            argv = ['collector', '--catalogue', str(source), '--output', str(output),
+                    '--ids-file', str(ids), '--reuse-cards', str(cached)]
+            calls = []
+
+            def fetch(opener, url, timeout, retries, attempts):
+                item_id = int(url.rstrip('/').split('/')[-1])
+                calls.append(item_id)
+                attempts.append({'url': url})
+                return json.dumps({'id': item_id}).encode()
+
+            with patch.object(sys, 'argv', argv), patch.object(collector, 'fetch_page', fetch):
+                self.assertEqual(collector.main(), 0)
+            self.assertEqual(calls, [3])
+            self.assertFalse((output / '1-detail.json').exists())
+            self.assertEqual(json.loads((output / 'selection.json').read_text(encoding='utf-8'))['ids'], [2, 3])
+
     def test_checkpoint_retries_temporary_windows_file_lock(self):
         with tempfile.TemporaryDirectory() as folder:
             target = Path(folder) / 'manifest.json'
