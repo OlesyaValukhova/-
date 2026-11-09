@@ -25,6 +25,14 @@ def date_state(group, as_of):
         return 'invalid_lesson_dates'
 
 
+def group_eligibility(age, group):
+    # The saved frontend renders the group age only when is_age_limit is true.
+    # A hidden interval is unknown, not proof of either eligibility or exclusion.
+    if group.get('is_age_limit') is not True:
+        return None
+    return eligibility(age, group)
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--details', type=Path, required=True)
@@ -48,10 +56,10 @@ def main():
             totals['date_' + date_state(group, a.as_of)] += 1
             totals['is_age_limit_' + str(group.get('is_age_limit'))] += 1
         for age in [7, 10, 13, 16]:
-            matched = [g for g in group_list if eligibility(age, g) is True
+            matched = [g for g in group_list if group_eligibility(age, g) is True
                        and date_state(g, a.as_of) == 'date_interval_covers_snapshot']
             uncertain = [g for g in group_list
-                         if eligibility(age, g) is not False
+                         if group_eligibility(age, g) is not False
                          and date_state(g, a.as_of) not in ('ended_before_snapshot', 'starts_after_snapshot')
                          and g not in matched]
             prog_age = eligibility(age, card)
@@ -74,7 +82,7 @@ def main():
     report = {'created_utc': datetime.now(timezone.utc).isoformat(), 'as_of': a.as_of.isoformat(),
               'source_directory': str(a.details), 'counts': dict(totals),
               'limitations': ['Partial, non-random card snapshot; counts are not representative of the district.',
-                  'Intervals are raw stated programme/group ages; is_age_limit is reported separately and semantics are not inferred.',
+                  'Group intervals count as stated only if is_age_limit is true; frontend display logic alone does not prove eligibility rules.',
                   'A lesson interval covering a date does not confirm sessions, enrolment or capacity.',
                   'No matching embedded group does not demonstrate no actual programme offering.',
                   'Current group location is not confirmed by these fields.']}
