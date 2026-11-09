@@ -24,6 +24,7 @@ def main():
     parser.add_argument('--origins', type=Path, required=True)
     parser.add_argument('--schools', '--destinations', dest='destinations', type=Path, required=True)
     parser.add_argument('--destination-kind', choices=['school_control', 'reported_program_coordinate'], default='school_control')
+    parser.add_argument('--network-source-note', default='Network dated by its metadata to 2026-05-31, not refreshed.')
     parser.add_argument('--output', type=Path, required=True)
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=False)
@@ -55,6 +56,9 @@ def main():
         if origins.empty or schools.empty or not schools.geometry.is_valid.all():
             raise ValueError('Input geometries need review')
         nodes = ox.graph_to_gdfs(nx.MultiDiGraph(graph), edges=False)
+        origin_snaps = gpd.sjoin_nearest(origins[['geometry']], nodes[['geometry']],
+            how='left', distance_col='origin_node_offset_m')
+        origins['nearest_node_offset_m'] = origin_snaps.groupby(level=0)['origin_node_offset_m'].min()
         destination_snaps = gpd.sjoin_nearest(schools[['geometry']], nodes[['geometry']],
             how='left', distance_col='destination_node_offset_m')
         schools['destination_node_offset_m'] = destination_snaps.groupby(level=0)['destination_node_offset_m'].min()
@@ -93,7 +97,7 @@ def main():
                       network_time_quantiles_minutes={str(k): float(v) for k, v in finite.quantile([0,.5,.9,.95,1]).items()},
                       walk_kmh=graph.graph['walk_speed'] * 60 / 1000,
                       versions={name: importlib.metadata.version(name) for name in ['transport_frames','iduedu','osmnx']},
-                      limitations=['Network dated by its metadata to 2026-05-31, not refreshed.',
+                      limitations=[args.network_source_note,
                           'Reported coordinates are unverified destinations; school assignment/programme participation and enrolment eligibility are not inferred.',
                           'Network-only column excludes attachments. TF-default column adds straight-line proxy attachments at 5 km/h only for positive paths; neither verifies entrances.',
                           'IduEdu prunes to largest strongly connected component and quantizes edge costs to 0.01 minutes; pruning/zero paths require review.',
