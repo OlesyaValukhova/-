@@ -19,13 +19,16 @@ def main():
     parser.add_argument('--extra-candidates', type=Path, help='Boundary candidate CSV with catalogue coordinates')
     parser.add_argument('--candidate-distance-m', type=float, default=1000,
                         help='Include outside candidates no farther than this from district boundary')
+    parser.add_argument('--candidate-origin-distance-m', type=float,
+                        help='Optionally prioritize candidates near at least one residential point')
     parser.add_argument('--prepare-only', action='store_true', help='Save acquisition area without calling Overpass')
     parser.add_argument('--overpass-url', default='https://overpass-api.de/api',
                         choices=['https://overpass-api.de/api', 'https://overpass.private.coffee/api',
                                  'https://overpass.kumi.systems/api'])
     args = parser.parse_args()
     if (not args.buildings.is_file() or not 0 < args.buffer_metres <= 3000
-            or args.candidate_distance_m <= 0 or (args.extra_candidates and not args.extra_candidates.is_file())):
+            or args.candidate_distance_m <= 0 or (args.extra_candidates and not args.extra_candidates.is_file())
+            or (args.candidate_origin_distance_m is not None and args.candidate_origin_distance_m <= 0)):
         parser.error('Require existing buildings and buffer 0..3000m')
     args.output.mkdir(parents=True, exist_ok=False)
     report = {'started_utc': datetime.now(timezone.utc).isoformat(), 'status': 'running',
@@ -67,6 +70,15 @@ def main():
             extra = gpd.GeoDataFrame(candidates,
                 geometry=[Point(x, y) for x, y in zip(candidates.catalog_longitude, candidates.catalog_latitude)],
                 crs=4326).to_crs(32636)
+            if args.candidate_origin_distance_m is not None:
+                nearest = gpd.sjoin_nearest(extra[['geometry']], metric[['geometry']], how='left',
+                                           distance_col='origin_straight_distance_m')
+                extra['origin_straight_distance_m'] = nearest.groupby(level=0).origin_straight_distance_m.min()
+                extra = extra.loc[extra.origin_straight_distance_m <= args.candidate_origin_distance_m].copy()
+                if extra.empty:
+                    raise ValueError('No outside candidates near any residential origin')
+                report['candidate_origin_distance_m'] = args.candidate_origin_distance_m
+                report['origin_distance_filter_note'] = 'Straight-line candidate prioritization; not a routed accessibility result.'
             seed = gpd.GeoSeries(pd.concat([metric.geometry, extra.geometry], ignore_index=True), crs=32636)
             extra.to_crs(4326).to_file(args.output / 'extra-candidates.geojson', driver='GeoJSON')
             report.update(extra_candidates=len(extra), extra_candidates_source=str(args.extra_candidates),
