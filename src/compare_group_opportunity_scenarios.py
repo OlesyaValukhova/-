@@ -28,6 +28,7 @@ def main():
     p.add_argument('--links', type=Path, required=True)
     p.add_argument('--details', type=Path, required=True)
     p.add_argument('--ids-file', type=Path, help='Optional JSON ID list to reproduce a previous card snapshot')
+    p.add_argument('--include-study-areas', action='store_true', help='Also report original, potentially overlapping study-area labels')
     p.add_argument('--as-of', type=date.fromisoformat, required=True)
     p.add_argument('--output', type=Path, required=True)
     a = p.parse_args()
@@ -73,9 +74,18 @@ def main():
             direction = ''
         elif not isinstance(direction, str):
             raise ValueError('Unrecognized direction schema')
+        areas = card.get('study_areas') or []
+        if not isinstance(areas, list):
+            raise ValueError('Unrecognized study-area schema')
+        labels = []
+        for area in areas:
+            if not isinstance(area, dict) or not isinstance(area.get('display_name'), str):
+                raise ValueError('Unrecognized study-area label')
+            labels.append(area['display_name'])
         base = {'program_id': card['id'], 'location_id': row['location_id'],
                 'payment_label_from_catalogue': row['payment_label'], 'payment_id_from_card': card.get('payment'),
-                'direction_label': direction, 'card_source_sha256': hashlib.sha256(raw).hexdigest()}
+                'direction_label': direction, 'study_area_labels': json.dumps(sorted(set(labels)), ensure_ascii=False),
+                'card_source_sha256': hashlib.sha256(raw).hexdigest()}
         for age in [7, 10, 13, 16]:
             is_program = eligibility(age, card) is True
             matching_groups = sum(group_eligibility(age, g) is True
@@ -90,11 +100,19 @@ def main():
     categories = [('all', 'all', None)]
     categories += [('direction', label, 'direction_label') for label in sorted(frame.direction_label.unique())]
     categories += [('payment', label, 'payment_label_from_catalogue') for label in sorted(frame.payment_label_from_catalogue.unique())]
+    if a.include_study_areas:
+        area_labels = sorted({label for value in frame.study_area_labels for label in json.loads(value)})
+        categories += [('study_area', label, 'study_area_labels') for label in area_labels]
     summaries = []
     for age in [7, 10, 13, 16]:
         age_frame = frame.loc[frame.age == age]
         for category_kind, label, field in categories:
-            subset = age_frame if field is None else age_frame.loc[age_frame[field] == label]
+            if field is None:
+                subset = age_frame
+            elif field == 'study_area_labels':
+                subset = age_frame.loc[age_frame[field].map(lambda value: label in json.loads(value))]
+            else:
+                subset = age_frame.loc[age_frame[field] == label]
             for scenario, column in [('programme_age', 'program_age_match'),
                                      ('programme_and_group_intervals', 'program_and_group_match')]:
                 selected = subset.loc[subset[column]]
@@ -126,12 +144,14 @@ def main():
               'payment_id_and_catalogue_labels': {str(k): int(v) for k, v in
                   Counter((str(r['payment_id_from_card']), r['payment_label_from_catalogue'])
                           for r in frame.loc[frame.age == 7].to_dict('records')).items()},
+              'study_area_categories_included': a.include_study_areas,
+              'cards_without_study_area_labels': int((frame.loc[frame.age == 7, 'study_area_labels'] == '[]').sum()),
               'interpretation': 'Compare sensitivity to programme versus stricter group-record evidence, not current attendance.',
               'limitations': ['Partial non-random set and catalogue missing coordinates: no inference to complete district supply.',
                   'No matching group record is not evidence of no real service; group dates do not establish sessions or enrolment.',
                   'Age flag interpretation is based on saved frontend display, not confirmed server admission rules.',
                   'Program coordinate is unverified group location, and coordinate pairs are not necessarily distinct venues.',
-                  'Payment and directions are reported categories, not verified current terms; categories need not be substitutes.',
+                  'Payment and directions are reported categories, not verified current terms; study-area labels can overlap and may remain broad.',
                   'Uniform 5km/h OD costs omit endpoint attachments; thresholds are exploratory scenarios, not norms.',
                   'Median is across buildings, not children; no assessment of escort, safety or real travel.']}
     (a.output / 'manifest.json').write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding='utf-8')
