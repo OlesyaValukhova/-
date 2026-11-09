@@ -27,3 +27,17 @@ Download date is not the data observation date. Keep API `created_at` and
 
 No account credentials are embedded in the collector. API response failures
 remain visible in the manifest; the collector does not bypass authorization.
+
+Audit a saved snapshot, including while collection continues:
+
+```powershell
+python src/audit_urban_objects.py --input data/urban-api-spb-buildings-20261109 --output results/urban-api-buildings-audit-20261109/audit.json
+```
+
+This requires Shapely (available in the GIS library environments). The auditor
+checks page hashes, object/geometry identifiers, declared counts, duplicate pairs
+and geometry validity. The first snapshot checked 2,500 rows on 5 pages, with no
+duplicate object/geometry pairs or invalid geometries. API declared 183,881 rows;
+this snapshot is incomplete and not spatially representative. Re-audit after
+collection ends. A physically repeated object with different geometry IDs is
+reported separately from an exact duplicate pair.
