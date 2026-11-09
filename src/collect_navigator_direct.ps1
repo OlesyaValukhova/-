@@ -6,7 +6,9 @@ param(
     [string]$ResumePages = '',
     [switch]$CollectDetails,
     [string]$DetailsCatalogue = '',
-    [string]$DetailsDirectory = ''
+    [string]$DetailsDirectory = '',
+    [string]$PriorityIds = '',
+    [string]$PriorityDirectory = ''
 )
 $ErrorActionPreference = 'Stop'
 $project = Split-Path $PSScriptRoot -Parent
@@ -52,8 +54,18 @@ try {
     $output = Join-Path $run 'catalogue'
     if ($DetailsCatalogue) {
         $detailsOutput = if ($DetailsDirectory) { $DetailsDirectory } else { Join-Path $run 'program-details' }
-        & $Python -u (Join-Path $PSScriptRoot 'collect_program_details.py') `
-            --catalogue $DetailsCatalogue --output $detailsOutput --timeout 20 --delay 1 --failure-stop 3 2>&1 |
+        if ($PriorityIds) {
+            if (-not $PriorityDirectory) { throw 'PriorityDirectory is required with PriorityIds.' }
+            & $Python -u (Join-Path $PSScriptRoot 'collect_program_details.py') `
+                --catalogue $DetailsCatalogue --output $PriorityDirectory --ids-file $PriorityIds `
+                --reuse-cards $detailsOutput --timeout 20 --delay 2 --failure-stop 3 2>&1 |
+                Tee-Object -FilePath (Join-Path $run 'priority-details.log')
+            if ($LASTEXITCODE -ne 0) { throw "Priority collection stopped with exit code $LASTEXITCODE." }
+        }
+        $detailArgs = @('-u', (Join-Path $PSScriptRoot 'collect_program_details.py'), '--catalogue', $DetailsCatalogue,
+            '--output', $detailsOutput, '--timeout', '20', '--delay', '1', '--failure-stop', '3')
+        if ($PriorityDirectory) { $detailArgs += @('--reuse-cards', $PriorityDirectory) }
+        & $Python @detailArgs 2>&1 |
             Tee-Object -FilePath (Join-Path $run 'details.log')
     } elseif ($ProbeDetails) {
         & $Python -u (Join-Path $PSScriptRoot 'probe_navigator_details.py') --output $output 2>&1 |

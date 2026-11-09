@@ -48,8 +48,16 @@ def main():
                     raise ValueError(f'Cached page source mismatch: {path}')
                 raw = path.read_bytes()
             else:
-                with urlopen(url, timeout=120) as r:
-                    raw = r.read()
+                for attempt in range(3):
+                    try:
+                        with urlopen(url, timeout=120) as r:
+                            raw = r.read()
+                        break
+                    except (OSError, TimeoutError) as exc:
+                        if attempt == 2:
+                            raise
+                        print(f'Page request failed: {type(exc).__name__}; retry {attempt + 1}/2', flush=True)
+                        time.sleep(10 * (attempt + 1))
                 json.loads(raw)
                 path.write_bytes(raw)
                 meta.write_text(json.dumps({'url': url}), encoding='utf-8')
