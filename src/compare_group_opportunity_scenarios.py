@@ -29,6 +29,7 @@ def main():
     p.add_argument('--details', type=Path, required=True)
     p.add_argument('--ids-file', type=Path, help='Optional JSON ID list to reproduce a previous card snapshot')
     p.add_argument('--include-study-areas', action='store_true', help='Also report original, potentially overlapping study-area labels')
+    p.add_argument('--activity-selection', type=Path, help='Manually reviewed title-based programme IDs by activity')
     p.add_argument('--as-of', type=date.fromisoformat, required=True)
     p.add_argument('--output', type=Path, required=True)
     a = p.parse_args()
@@ -82,7 +83,7 @@ def main():
             if not isinstance(area, dict) or not isinstance(area.get('display_name'), str):
                 raise ValueError('Unrecognized study-area label')
             labels.append(area['display_name'])
-        base = {'program_id': card['id'], 'location_id': row['location_id'],
+        base = {'program_id': card['id'], 'program_name': card.get('name'), 'location_id': row['location_id'],
                 'payment_label_from_catalogue': row['payment_label'], 'payment_id_from_card': card.get('payment'),
                 'direction_label': direction, 'study_area_labels': json.dumps(sorted(set(labels)), ensure_ascii=False),
                 'card_source_sha256': hashlib.sha256(raw).hexdigest()}
@@ -97,12 +98,24 @@ def main():
     frame = pd.DataFrame(records)
     if frame.empty:
         raise ValueError('No saved programme cards')
+    selected_activities = {}
+    if a.activity_selection:
+        raw_selection = json.loads(a.activity_selection.read_text(encoding='utf-8'))
+        selected_activities = raw_selection['categories']
+        if not isinstance(selected_activities, dict) or not selected_activities:
+            raise ValueError('Activity selection must contain categories')
+        for label, ids in selected_activities.items():
+            if not isinstance(label, str) or not isinstance(ids, list) or not ids or any(type(i) is not int for i in ids):
+                raise ValueError('Each activity must have an explicit list of integer IDs')
+            if len(ids) != len(set(ids)) or not set(ids).issubset(set(links.program_id)):
+                raise ValueError(f'Invalid or non-catalogue IDs in {label}')
     categories = [('all', 'all', None)]
     categories += [('direction', label, 'direction_label') for label in sorted(frame.direction_label.unique())]
     categories += [('payment', label, 'payment_label_from_catalogue') for label in sorted(frame.payment_label_from_catalogue.unique())]
     if a.include_study_areas:
         area_labels = sorted({label for value in frame.study_area_labels for label in json.loads(value)})
         categories += [('study_area', label, 'study_area_labels') for label in area_labels]
+    categories += [('reviewed_title_activity', label, '__activity_selection__') for label in selected_activities]
     summaries = []
     for age in [7, 10, 13, 16]:
         age_frame = frame.loc[frame.age == age]
@@ -111,6 +124,8 @@ def main():
                 subset = age_frame
             elif field == 'study_area_labels':
                 subset = age_frame.loc[age_frame[field].map(lambda value: label in json.loads(value))]
+            elif field == '__activity_selection__':
+                subset = age_frame.loc[age_frame.program_id.isin(selected_activities[label])]
             else:
                 subset = age_frame.loc[age_frame[field] == label]
             for scenario, column in [('programme_age', 'program_age_match'),
@@ -133,6 +148,16 @@ def main():
                         'origins_without_matching_records': int((programs == 0).sum())})
     a.output.mkdir(parents=True)
     frame.to_csv(a.output / 'program-scenarios.csv', index=False, encoding='utf-8-sig')
+    if selected_activities:
+        reviewed = []
+        single_age = frame.loc[frame.age == 7]
+        for label, ids in selected_activities.items():
+            for record in single_age.loc[single_age.program_id.isin(ids)].to_dict('records'):
+                reviewed.append({'activity_label': label, 'program_id': record['program_id'],
+                    'program_name': record['program_name'], 'location_id': record['location_id'],
+                    'payment_label_from_catalogue': record['payment_label_from_catalogue'],
+                    'card_source_sha256': record['card_source_sha256']})
+        pd.DataFrame(reviewed).to_csv(a.output / 'reviewed-activity-programs.csv', index=False, encoding='utf-8-sig')
     (a.output / 'snapshot-card-ids.json').write_text(
         json.dumps(sorted(int(i) for i in frame.program_id.unique())), encoding='utf-8')
     pd.DataFrame(summaries).to_csv(a.output / 'summary.csv', index=False, encoding='utf-8-sig')
@@ -145,6 +170,7 @@ def main():
                   Counter((str(r['payment_id_from_card']), r['payment_label_from_catalogue'])
                           for r in frame.loc[frame.age == 7].to_dict('records')).items()},
               'study_area_categories_included': a.include_study_areas,
+              'activity_selection': {'path': str(a.activity_selection), 'sha256': digest(a.activity_selection)} if a.activity_selection else None,
               'cards_without_study_area_labels': int((frame.loc[frame.age == 7, 'study_area_labels'] == '[]').sum()),
               'interpretation': 'Compare sensitivity to programme versus stricter group-record evidence, not current attendance.',
               'limitations': ['Partial non-random set and catalogue missing coordinates: no inference to complete district supply.',
