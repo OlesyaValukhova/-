@@ -108,6 +108,8 @@ def main():
         }
         rows.append({
             'program_id': card['id'], 'program_name': card.get('name'), 'district': card.get('district'),
+            'program_address_raw': card.get('address'), 'latitude_raw': card.get('latitude'),
+            'longitude_raw': card.get('longitude'),
             'payment_raw': card.get('payment'), 'cost_raw': card.get('cost'),
             'group_count': len(groups), 'source_sha256': sha256, **state_flags,
         })
