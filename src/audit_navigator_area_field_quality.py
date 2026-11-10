@@ -40,7 +40,9 @@ def main() -> None:
     selected: list[dict[str, str]] = []
     excluded_no_coordinate = 0
 
-    with args.fields.open(encoding="utf-8", newline="") as handle:
+    # The audit CSV is written as UTF-8 with BOM for spreadsheet compatibility.
+    # utf-8-sig prevents the BOM from becoming part of the program_id header.
+    with args.fields.open(encoding="utf-8-sig", newline="") as handle:
         reader = csv.DictReader(handle)
         for row in reader:
             try:
