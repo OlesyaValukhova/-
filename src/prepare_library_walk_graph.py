@@ -14,6 +14,8 @@ import sys
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--buildings', type=Path, required=True)
+    parser.add_argument('--already-residential', action='store_true',
+                        help='Input is a prefiltered residential layer (for the Urban API export).')
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--buffer-metres', type=float, default=1000)
     parser.add_argument('--extra-candidates', type=Path, help='Boundary candidate CSV with catalogue coordinates')
@@ -52,7 +54,10 @@ def main():
         buildings = gpd.read_file(args.buildings)
         if buildings.crs is None:
             raise ValueError('Source CRS is missing')
-        buildings = buildings.loc[buildings['Тип физического объекта'] == 'Жилой дом'].copy()
+        if not args.already_residential:
+            if 'Тип физического объекта' not in buildings:
+                raise ValueError('Use --already-residential for a prefiltered layer, or provide the Prostor type column')
+            buildings = buildings.loc[buildings['Тип физического объекта'] == 'Жилой дом'].copy()
         if buildings.empty or buildings.geometry.isna().any() or not buildings.geometry.is_valid.all():
             raise ValueError('Residential building geometry needs review')
         origins = buildings[['geometry']].copy()
