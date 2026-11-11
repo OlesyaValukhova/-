@@ -64,6 +64,8 @@ def main():
     p.add_argument('--wait-min', type=float, default=5,
                    help='Added per boarding edge in B3, not per ride edge')
     p.add_argument('--batch-size', type=int, default=32)
+    p.add_argument('--no-geojson', action='store_true',
+                   help='Write CSV outputs only (useful when many cases are compared).')
     a = p.parse_args()
     if a.batch_size < 1 or a.snap_m <= 0 or a.wait_min < 0:
         p.error('Invalid batch-size, snap-m or wait-min')
@@ -215,8 +217,9 @@ def main():
         folder=a.output/name
         folder.mkdir(exist_ok=True)
         out.to_csv(folder/f'{a.scenario.lower()}-by-origin.csv',index=False,encoding='utf-8-sig')
-        geo=origins[['origin_id','geometry']].merge(out,on='origin_id',validate='one_to_one')
-        geo.to_crs(4326).to_file(folder/f'{a.scenario.lower()}-by-origin.geojson',driver='GeoJSON')
+        if not a.no_geojson:
+            geo=origins[['origin_id','geometry']].merge(out,on='origin_id',validate='one_to_one')
+            geo.to_crs(4326).to_file(folder/f'{a.scenario.lower()}-by-origin.geojson',driver='GeoJSON')
         summary['cases'][name]={'venues_total':total_v,'venues_snapped':nv,'offer_cards':total_o,
                                 'eligible_snapped_venues':{str(age):len(ages[age]['nodes']) for age in a.ages}}
     (a.output/'summary.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2),encoding='utf8')
