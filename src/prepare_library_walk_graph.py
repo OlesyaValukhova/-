@@ -24,6 +24,8 @@ def main():
     parser.add_argument('--candidate-origin-distance-m', type=float,
                         help='Optionally prioritize candidates near at least one residential point')
     parser.add_argument('--prepare-only', action='store_true', help='Save acquisition area without calling Overpass')
+    parser.add_argument('--osmnx-cache', type=Path,
+                        help='Existing OSMnx cache to reuse for the same endpoint and acquisition geometry')
     parser.add_argument('--overpass-url', default='https://overpass-api.de/api',
                         choices=['https://overpass-api.de/api', 'https://overpass.private.coffee/api',
                                  'https://overpass.kumi.systems/api'])
@@ -92,11 +94,15 @@ def main():
         area = gpd.GeoDataFrame(geometry=[seed.union_all().convex_hull.buffer(args.buffer_metres)], crs=32636).to_crs(4326)
         area.to_file(args.output / 'acquisition-area.geojson', driver='GeoJSON')
         ox.settings.use_cache = True
-        ox.settings.cache_folder = str(args.output / 'osmnx-cache')
+        cache_folder = args.osmnx_cache or (args.output / 'osmnx-cache')
+        if args.osmnx_cache and not args.osmnx_cache.is_dir():
+            raise ValueError('--osmnx-cache must be an existing directory')
+        ox.settings.cache_folder = str(cache_folder)
         ox.settings.requests_timeout = 60
         ox.settings.overpass_rate_limit = False
         ox.settings.overpass_url = args.overpass_url
         report.update(origins=len(origins), acquisition_bounds=area.total_bounds.tolist(),
+                      osmnx_cache_folder=str(cache_folder),
                       versions={name: importlib.metadata.version(name) for name in ['blocksnet','iduedu','osmnx']})
         manifest.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding='utf-8')
         if args.prepare_only:
