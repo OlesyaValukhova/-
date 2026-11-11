@@ -1,0 +1,24 @@
+{
+  "status": "validated",
+  "started_utc": "2026-11-11T08:31:23.303801+00:00",
+  "tile_size_m": 2000.0,
+  "buffer_m": 2500.0,
+  "thresholds_minutes": [
+    10,
+    15,
+    20,
+    30
+  ],
+  "ages": [
+    7,
+    13
+  ],
+  "origins": 1265,
+  "tiles": 9,
+  "graph_nodes": 56006,
+  "graph_edges": 147044,
+  "tolerance": 1e-05,
+  "differing_cells": 0,
+  "maximum_absolute_difference": 0.0,
+  "finished_utc": "2026-11-11T08:33:06.140476+00:00"
+}

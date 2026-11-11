@@ -40,7 +40,7 @@ def digest(path: Path) -> str:
 
 
 class WalkGraphHandler(osmium.SimpleHandler):
-    def __init__(self, target_crs: int):
+    def __init__(self, target_crs: int, bounds: tuple[float, float, float, float] | None = None):
         super().__init__()
         # A simple directed graph deliberately retains only the shortest OSM
         # segment between a pair of nodes.  Parallel carriageway/footway
@@ -48,6 +48,7 @@ class WalkGraphHandler(osmium.SimpleHandler):
         # textual tags makes a city graph exceed ordinary laptop memory.
         self.graph = nx.DiGraph(crs=target_crs, walk_speed=WALK_SPEED_M_PER_MIN)
         self.transformer = Transformer.from_crs(4326, target_crs, always_xy=True)
+        self.bounds = bounds  # minx, miny, maxx, maxy in target_crs; None means full PBF
         self.excluded = Counter()
         self.accepted_ways = 0
         self.accepted_segments = 0
@@ -87,6 +88,16 @@ class WalkGraphHandler(osmium.SimpleHandler):
             self.graph.add_edge(u, v, length_meter=length,
                                 time_min=length / WALK_SPEED_M_PER_MIN)
 
+    def _intersects_bounds(self, x1: float, y1: float, x2: float, y2: float) -> bool:
+        if self.bounds is None:
+            return True
+        minx, miny, maxx, maxy = self.bounds
+        # Segment bounding-box filter. A subsequent route whose total length
+        # is <= buffer cannot leave the buffered tile; retaining endpoints at
+        # the boundary avoids cutting a traversable segment in half.
+        return not (max(x1, x2) < minx or min(x1, x2) > maxx or
+                    max(y1, y2) < miny or min(y1, y2) > maxy)
+
     def way(self, way):
         tags = {tag.k: tag.v for tag in way.tags}
         reason = self._reason(tags)
@@ -103,11 +114,17 @@ class WalkGraphHandler(osmium.SimpleHandler):
         added = False
         for index, (a, b) in enumerate(zip(refs, refs[1:])):
             try:
-                u, lon1, lat1, _, _ = self._node(a)
-                v, lon2, lat2, _, _ = self._node(b)
+                lon1, lat1 = a.location.lon, a.location.lat
+                lon2, lat2 = b.location.lon, b.location.lat
             except osmium.InvalidLocationError:
                 self.excluded["missing_node_location"] += 1
                 continue
+            x1, y1 = self.transformer.transform(lon1, lat1)
+            x2, y2 = self.transformer.transform(lon2, lat2)
+            if not self._intersects_bounds(x1, y1, x2, y2):
+                continue
+            u, _, _, _, _ = self._node(a)
+            v, _, _, _, _ = self._node(b)
             if u == v:
                 continue
             _, _, length = GEOD.inv(lon1, lat1, lon2, lat2)
