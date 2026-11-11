@@ -1,0 +1,407 @@
+{
+  "scenario": "B1",
+  "unit": "ready-made BlocksNet block",
+  "directions": 43,
+  "routing_repeated": false,
+  "block_source": "C:\\Users\\olesy\\PycharmProjects\\blocksnet-data\\cities\\saint_petersburg\\data\\blocks_cleaned.geojson",
+  "block_id_field": "SHA-256(normalized source geometry), first 16 hex characters",
+  "spatial_join": {
+    "n_origins_input": 30611,
+    "n_origins_assigned_to_block": 30609,
+    "n_origins_unassigned_to_block": 2,
+    "join_predicate": "within",
+    "block_id_field": "SHA-256(normalized source geometry), first 16 hex characters",
+    "source_duplicate_geometry_records_removed": 5,
+    "by_direction": [
+      {
+        "study_area_id": "86",
+        "study_area_name": "3D моделирование, прототипирование",
+        "n_result_rows": 30611,
+        "n_network_covered": 30224,
+        "n_network_uncovered": 387,
+        "n_valid_for_age_comparison": 30224,
+        "n_valid_unassigned_to_block": 2
+      },
+      {
+        "study_area_id": "49",
+        "study_area_name": "Акробатика",
+        "n_result_rows": 30611,
+        "n_network_covered": 30224,
+        "n_network_uncovered": 387,
+        "n_valid_for_age_comparison": 30224,
+        "n_valid_unassigned_to_block": 2
+      },
+      {
+        "study_area_id": "28",
+        "study_area_name": "Биология",
+        "n_result_rows": 30611,
+        "n_network_covered": 30224,
+        "n_network_uncovered": 387,
+        "n_valid_for_age_comparison": 30224,
+        "n_valid_unassigned_to_block": 2
+      },
+      {
+        "study_area_id": "51",
+        "study_area_name": "Водные виды спорта",
+        "n_result_rows": 30611,
+        "n_network_covered": 30224,
+        "n_network_uncovered": 387,
+        "n_valid_for_age_comparison": 30224,
+        "n_valid_unassigned_to_block": 2
+      },
+      {
+        "study_area_id": "27",
+        "study_area_name": "Военно-патриотические объединения",
+        "n_result_rows": 30611,
+        "n_network_covered": 30224,
+        "n_network_uncovered": 387,
+        "n_valid_for_age_comparison": 30224,
+        "n_valid_unassigned_to_block": 2
+      },
+      {
+        "study_area_id": "47",
+        "study_area_name": "Вокальное искусство",
+        "n_result_rows": 30611,
+        "n_network_covered": 30224,
+        "n_network_uncovered": 387,
+        "n_valid_for_age_comparison": 30224,
+        "n_valid_unassigned_to_block": 2
+      },
+      {
+        "study_area_id": "22",
+        "study_area_name": "Волонтерская работа",
+        "n_result_rows": 30611,
+        "n_network_covered": 30224,
+        "n_network_uncovered": 387,
+        "n_valid_for_age_comparison": 30224,
+        "n_valid_unassigned_to_block": 2
+      },
+      {
+        "study_area_id": "52",
+        "study_area_name": "Гимнастика",
+        "n_result_rows": 30611,
+        "n_network_covered": 30224,
+        "n_network_uncovered": 387,
+        "n_valid_for_age_comparison": 30224,
+        "n_valid_unassigned_to_block": 2
+      },
+      {
+        "study_area_id": "48",
+        "study_area_name": "Декоративно-прикладное искусство",
+        "n_result_rows": 30611,
+        "n_network_covered": 30224,
+        "n_network_uncovered": 387,
+        "n_valid_for_age_comparison": 30224,
+        "n_valid_unassigned_to_block": 2
+      },
+      {
+        "study_area_id": "54",
+        "study_area_name": "Единоборства",
+        "n_result_rows": 30611,
+        "n_network_covered": 30224,
+        "n_network_uncovered": 387,
+        "n_valid_for_age_comparison": 30224,
+        "n_valid_unassigned_to_block": 2
+      },
+      {
+        "study_area_id": "55",
+        "study_area_name": "Игровые виды спорта",
+        "n_result_rows": 30611,
+        "n_network_covered": 30224,
+        "n_network_uncovered": 387,
+        "n_valid_for_age_comparison": 30224,
+        "n_valid_unassigned_to_block": 2
+      },
+      {
+        "study_area_id": "38",
+        "study_area_name": "Изобразительное искусство",
+        "n_result_rows": 30611,
+        "n_network_covered": 30224,
+        "n_network_uncovered": 387,
+        "n_valid_for_age_comparison": 30224,
+        "n_valid_unassigned_to_block": 2
+      },
+      {
+        "study_area_id": "39",
+        "study_area_name": "Инструментальное музицирование",
+        "n_result_rows": 30611,
+        "n_network_covered": 30224,
+        "n_network_uncovered": 387,
+        "n_valid_for_age_comparison": 30224,
+        "n_valid_unassigned_to_block": 2
+      },
+      {
+        "study_area_id": "77",
+        "study_area_name": "Информационные технологии",
+        "n_result_rows": 30611,
+        "n_network_covered": 30224,
+        "n_network_uncovered": 387,
+        "n_valid_for_age_comparison": 30224,
+        "n_valid_unassigned_to_block": 2
+      },
+      {
+        "study_area_id": "56",
+        "study_area_name": "Командные спортивные игры",
+        "n_result_rows": 30611,
+        "n_network_covered": 30224,
+        "n_network_uncovered": 387,
+        "n_valid_for_age_comparison": 30224,
+        "n_valid_unassigned_to_block": 2
+      },
+      {
+        "study_area_id": "58",
+        "study_area_name": "Легкая атлетика",
+        "n_result_rows": 30611,
+        "n_network_covered": 30224,
+        "n_network_uncovered": 387,
+        "n_valid_for_age_comparison": 30224,
+        "n_valid_unassigned_to_block": 2
+      },
+      {
+        "study_area_id": "29",
+        "study_area_name": "Математические предметы",
+        "n_result_rows": 30611,
+        "n_network_covered": 30224,
+        "n_network_uncovered": 387,
+        "n_valid_for_age_comparison": 30224,
+        "n_valid_unassigned_to_block": 2
+      },
+      {
+        "study_area_id": "84",
+        "study_area_name": "Моделирование",
+        "n_result_rows": 30611,
+        "n_network_covered": 30224,
+        "n_network_uncovered": 387,
+        "n_valid_for_age_comparison": 30224,
+        "n_valid_unassigned_to_block": 2
+      },
+      {
+        "study_area_id": "83",
+        "study_area_name": "Мультимедиа студии и киностудии",
+        "n_result_rows": 30611,
+        "n_network_covered": 30224,
+        "n_network_uncovered": 387,
+        "n_valid_for_age_comparison": 30224,
+        "n_valid_unassigned_to_block": 2
+      },
+      {
+        "study_area_id": "60",
+        "study_area_name": "Настольные спортивные игры",
+        "n_result_rows": 30611,
+        "n_network_covered": 30224,
+        "n_network_uncovered": 387,
+        "n_valid_for_age_comparison": 30224,
+        "n_valid_unassigned_to_block": 2
+      },
+      {
+        "study_area_id": "61",
+        "study_area_name": "Настольный теннис",
+        "n_result_rows": 30611,
+        "n_network_covered": 30224,
+        "n_network_uncovered": 387,
+        "n_valid_for_age_comparison": 30224,
+        "n_valid_unassigned_to_block": 2
+      },
+      {
+        "study_area_id": "79",
+        "study_area_name": "Начальное техническое моделирование",
+        "n_result_rows": 30611,
+        "n_network_covered": 30224,
+        "n_network_uncovered": 387,
+        "n_valid_for_age_comparison": 30224,
+        "n_valid_unassigned_to_block": 2
+      },
+      {
+        "study_area_id": "41",
+        "study_area_name": "Общие знания",
+        "n_result_rows": 30611,
+        "n_network_covered": 30224,
+        "n_network_uncovered": 387,
+        "n_valid_for_age_comparison": 30224,
+        "n_valid_unassigned_to_block": 2
+      },
+      {
+        "study_area_id": "65",
+        "study_area_name": "Подвижные спортивные игры",
+        "n_result_rows": 30611,
+        "n_network_covered": 30224,
+        "n_network_uncovered": 387,
+        "n_valid_for_age_comparison": 30224,
+        "n_valid_unassigned_to_block": 2
+      },
+      {
+        "study_area_id": "81",
+        "study_area_name": "Программирование",
+        "n_result_rows": 30611,
+        "n_network_covered": 30224,
+        "n_network_uncovered": 387,
+        "n_valid_for_age_comparison": 30224,
+        "n_valid_unassigned_to_block": 2
+      },
+      {
+        "study_area_id": "23",
+        "study_area_name": "Профессиональная ориентация",
+        "n_result_rows": 30611,
+        "n_network_covered": 30224,
+        "n_network_uncovered": 387,
+        "n_valid_for_age_comparison": 30224,
+        "n_valid_unassigned_to_block": 2
+      },
+      {
+        "study_area_id": "24",
+        "study_area_name": "Психология",
+        "n_result_rows": 30611,
+        "n_network_covered": 30224,
+        "n_network_uncovered": 387,
+        "n_valid_for_age_comparison": 30224,
+        "n_valid_unassigned_to_block": 2
+      },
+      {
+        "study_area_id": "85",
+        "study_area_name": "Робототехника",
+        "n_result_rows": 30611,
+        "n_network_covered": 30224,
+        "n_network_uncovered": 387,
+        "n_valid_for_age_comparison": 30224,
+        "n_valid_unassigned_to_block": 2
+      },
+      {
+        "study_area_id": "25",
+        "study_area_name": "Социальная адаптация",
+        "n_result_rows": 30611,
+        "n_network_covered": 30224,
+        "n_network_uncovered": 387,
+        "n_valid_for_age_comparison": 30224,
+        "n_valid_unassigned_to_block": 2
+      },
+      {
+        "study_area_id": "67",
+        "study_area_name": "Спортивная хореография",
+        "n_result_rows": 30611,
+        "n_network_covered": 30224,
+        "n_network_uncovered": 387,
+        "n_valid_for_age_comparison": 30224,
+        "n_valid_unassigned_to_block": 2
+      },
+      {
+        "study_area_id": "76",
+        "study_area_name": "Спортивный туризм",
+        "n_result_rows": 30611,
+        "n_network_covered": 30224,
+        "n_network_uncovered": 387,
+        "n_valid_for_age_comparison": 30224,
+        "n_valid_unassigned_to_block": 2
+      },
+      {
+        "study_area_id": "90",
+        "study_area_name": "Театр",
+        "n_result_rows": 30611,
+        "n_network_covered": 30224,
+        "n_network_uncovered": 387,
+        "n_valid_for_age_comparison": 30224,
+        "n_valid_unassigned_to_block": 2
+      },
+      {
+        "study_area_id": "74",
+        "study_area_name": "Туризм и краеведение",
+        "n_result_rows": 30611,
+        "n_network_covered": 30224,
+        "n_network_uncovered": 387,
+        "n_valid_for_age_comparison": 30224,
+        "n_valid_unassigned_to_block": 2
+      },
+      {
+        "study_area_id": "75",
+        "study_area_name": "Туризм и экология",
+        "n_result_rows": 30611,
+        "n_network_covered": 30224,
+        "n_network_uncovered": 387,
+        "n_valid_for_age_comparison": 30224,
+        "n_valid_unassigned_to_block": 2
+      },
+      {
+        "study_area_id": "33",
+        "study_area_name": "Физика",
+        "n_result_rows": 30611,
+        "n_network_covered": 30224,
+        "n_network_uncovered": 387,
+        "n_valid_for_age_comparison": 30224,
+        "n_valid_unassigned_to_block": 2
+      },
+      {
+        "study_area_id": "34",
+        "study_area_name": "Химия",
+        "n_result_rows": 30611,
+        "n_network_covered": 30224,
+        "n_network_uncovered": 387,
+        "n_valid_for_age_comparison": 30224,
+        "n_valid_unassigned_to_block": 2
+      },
+      {
+        "study_area_id": "43",
+        "study_area_name": "Хореография",
+        "n_result_rows": 30611,
+        "n_network_covered": 30224,
+        "n_network_uncovered": 387,
+        "n_valid_for_age_comparison": 30224,
+        "n_valid_unassigned_to_block": 2
+      },
+      {
+        "study_area_id": "44",
+        "study_area_name": "Хоровое пение",
+        "n_result_rows": 30611,
+        "n_network_covered": 30224,
+        "n_network_uncovered": 387,
+        "n_valid_for_age_comparison": 30224,
+        "n_valid_unassigned_to_block": 2
+      },
+      {
+        "study_area_id": "45",
+        "study_area_name": "Цирковое искусство",
+        "n_result_rows": 30611,
+        "n_network_covered": 30224,
+        "n_network_uncovered": 387,
+        "n_valid_for_age_comparison": 30224,
+        "n_valid_unassigned_to_block": 2
+      },
+      {
+        "study_area_id": "89",
+        "study_area_name": "Шахматы",
+        "n_result_rows": 30611,
+        "n_network_covered": 30224,
+        "n_network_uncovered": 387,
+        "n_valid_for_age_comparison": 30224,
+        "n_valid_unassigned_to_block": 2
+      },
+      {
+        "study_area_id": "26",
+        "study_area_name": "Школа актива и/или РДШ",
+        "n_result_rows": 30611,
+        "n_network_covered": 30224,
+        "n_network_uncovered": 387,
+        "n_valid_for_age_comparison": 30224,
+        "n_valid_unassigned_to_block": 2
+      },
+      {
+        "study_area_id": "31",
+        "study_area_name": "Экология",
+        "n_result_rows": 30611,
+        "n_network_covered": 30224,
+        "n_network_uncovered": 387,
+        "n_valid_for_age_comparison": 30224,
+        "n_valid_unassigned_to_block": 2
+      },
+      {
+        "study_area_id": "46",
+        "study_area_name": "Эстрадное пение",
+        "n_result_rows": 30611,
+        "n_network_covered": 30224,
+        "n_network_uncovered": 387,
+        "n_valid_for_age_comparison": 30224,
+        "n_valid_unassigned_to_block": 2
+      }
+    ],
+    "source_block_records": 9572,
+    "blocks_after_exact_geometry_deduplication": 9567
+  }
+}
