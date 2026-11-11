@@ -24,17 +24,18 @@ def main():
     p.add_argument('--pbf',type=Path,required=True); p.add_argument('--origins',type=Path,required=True); p.add_argument('--output',type=Path,required=True)
     p.add_argument('--case',nargs=3,action='append',metavar=('NAME','OFFERS_CSV','VENUES_GEOJSON'),required=True)
     p.add_argument('--ages',type=float,nargs='+',default=[7,13]); p.add_argument('--thresholds',type=float,nargs='+',default=[10,15,20,30]); p.add_argument('--tile-size-m',type=float,default=8000); p.add_argument('--crs',type=int,default=32636)
+    p.add_argument('--broad-street-topology',action='store_true',help='Do not remove OSM highway ways solely because foot/access is no/private; structural baseline only.')
     a=p.parse_args()
     if a.output.exists(): p.error('Output must be new')
     a.output.mkdir(parents=True); buffer_m=max(a.thresholds)*WALK_SPEED_M_PER_MIN
     origins=gpd.read_file(a.origins).to_crs(a.crs); origins['origin_id']=origins.get('origin_id',pd.Series(origins.index,index=origins.index)).astype(str)
     cases=[load_case(n,Path(o),Path(v),a.crs) for n,o,v in a.case]
-    manifest={'status':'running','started_utc':datetime.now(timezone.utc).isoformat(),'scenario':'B1 buffered sequential tiles; one PBF graph per tile for all cases','ages':a.ages,'thresholds_minutes':a.thresholds,'tile_size_m':a.tile_size_m,'buffer_m':buffer_m,'origins':len(origins),'main_case':cases[0]['name'],'metric_units':{'N_venue':'unique published-coordinate venue proxies (primary)','N_offer_card':'age-eligible programme-card-coordinate offer proxies (supplementary)'},'deduplication':'exact published longitude/latitude formatted to 12 decimals and hashed to coordinate_id','sources':{str(a.pbf):sha(a.pbf),str(a.origins):sha(a.origins)},'cases':{c['name']:c['sources'] for c in cases},'tile_audit':[]}
+    manifest={'status':'running','started_utc':datetime.now(timezone.utc).isoformat(),'scenario':'B1 buffered sequential tiles; one PBF graph per tile for all cases','network_rule':'broad street topology: road tags retained despite foot/access restriction' if a.broad_street_topology else 'strict OSM foot/access filtering','ages':a.ages,'thresholds_minutes':a.thresholds,'tile_size_m':a.tile_size_m,'buffer_m':buffer_m,'origins':len(origins),'main_case':cases[0]['name'],'metric_units':{'N_venue':'unique published-coordinate venue proxies (primary)','N_offer_card':'age-eligible programme-card-coordinate offer proxies (supplementary)'},'deduplication':'exact published longitude/latitude formatted to 12 decimals and hashed to coordinate_id','sources':{str(a.pbf):sha(a.pbf),str(a.origins):sha(a.origins)},'cases':{c['name']:c['sources'] for c in cases},'tile_audit':[]}
     mp=a.output/'manifest.json'; mp.write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf8')
     try:
       from build_walk_graph_from_osm_pbf import WalkGraphHandler
       for ordinal,(ix,iy,tile_origins,bounds) in enumerate(make_tiles(origins,a.tile_size_m),1):
-        area=box(*bounds).buffer(buffer_m); h=WalkGraphHandler(a.crs,tuple(area.bounds)); h.apply_file(str(a.pbf),locations=True); graph=h.graph
+        area=box(*bounds).buffer(buffer_m); h=WalkGraphHandler(a.crs,tuple(area.bounds),include_foot_restricted=a.broad_street_topology); h.apply_file(str(a.pbf),locations=True); graph=h.graph
         tile={'tile':ordinal,'tile_x':ix,'tile_y':iy,'origins':len(tile_origins),'graph_nodes':graph.number_of_nodes(),'graph_edges':graph.number_of_edges(),'status':'computed' if graph.number_of_edges() else 'uncovered_no_usable_pbf_network'}
         for c in cases:
           localv=c['venues'][c['venues'].geometry.intersects(area)].copy(); localo=c['offers'][c['offers'].coordinate_id.isin(set(localv.coordinate_id))].copy()

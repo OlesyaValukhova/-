@@ -40,7 +40,8 @@ def digest(path: Path) -> str:
 
 
 class WalkGraphHandler(osmium.SimpleHandler):
-    def __init__(self, target_crs: int, bounds: tuple[float, float, float, float] | None = None):
+    def __init__(self, target_crs: int, bounds: tuple[float, float, float, float] | None = None,
+                 include_foot_restricted: bool = False):
         super().__init__()
         # A simple directed graph deliberately retains only the shortest OSM
         # segment between a pair of nodes.  Parallel carriageway/footway
@@ -49,22 +50,22 @@ class WalkGraphHandler(osmium.SimpleHandler):
         self.graph = nx.DiGraph(crs=target_crs, walk_speed=WALK_SPEED_M_PER_MIN)
         self.transformer = Transformer.from_crs(4326, target_crs, always_xy=True)
         self.bounds = bounds  # minx, miny, maxx, maxy in target_crs; None means full PBF
+        self.include_foot_restricted = include_foot_restricted
         self.excluded = Counter()
         self.accepted_ways = 0
         self.accepted_segments = 0
         self.min_lon = self.min_lat = float("inf")
         self.max_lon = self.max_lat = float("-inf")
 
-    @staticmethod
-    def _reason(tags: dict[str, str]) -> str | None:
+    def _reason(self, tags: dict[str, str]) -> str | None:
         highway = tags.get("highway")
         if not highway:
             return "no_highway"
         if highway not in WALK_HIGHWAYS:
             return "excluded_highway"
-        if tags.get("foot") in {"no", "private"}:
+        if not self.include_foot_restricted and tags.get("foot") in {"no", "private"}:
             return "foot_restriction"
-        if tags.get("access") in {"no", "private"} and tags.get("foot") not in {
+        if not self.include_foot_restricted and tags.get("access") in {"no", "private"} and tags.get("foot") not in {
             "yes", "designated", "permissive",
         }:
             return "access_restriction"
