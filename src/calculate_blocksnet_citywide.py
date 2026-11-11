@@ -66,6 +66,8 @@ def main():
     p.add_argument('--batch-size', type=int, default=32)
     p.add_argument('--no-geojson', action='store_true',
                    help='Write CSV outputs only (useful when many cases are compared).')
+    p.add_argument('--exclude-edge-ids', type=Path,
+                   help='CSV with directed edge_id values u:v:key for a diagnostic sensitivity scenario.')
     a = p.parse_args()
     if a.batch_size < 1 or a.snap_m <= 0 or a.wait_min < 0:
         p.error('Invalid batch-size, snap-m or wait-min')
@@ -78,7 +80,8 @@ def main():
                     case=[[n,str(Path(o).resolve()),str(Path(v).resolve())] for n,o,v in a.case],
                     scenario=a.scenario, ages=a.ages, thresholds=a.thresholds,
                     snap_m=a.snap_m, wait_min=a.wait_min if a.scenario=='B3' else 0,
-                    batch_size=a.batch_size)
+                    batch_size=a.batch_size,
+                    exclude_edge_ids=str(a.exclude_edge_ids.resolve()) if a.exclude_edge_ids else None)
     settings_file = a.output/'settings.json'
     if settings_file.exists():
         if json.loads(settings_file.read_text(encoding='utf8')) != settings:
@@ -88,6 +91,20 @@ def main():
     print('Loading graph...', flush=True)
     with a.graph.open('rb') as f:
         G = pickle.load(f)  # Load only from trusted source.
+    excluded_edges = 0
+    if a.exclude_edge_ids:
+        exclusions = pd.read_csv(a.exclude_edge_ids, dtype={'edge_id': str})
+        if 'edge_id' not in exclusions:
+            raise ValueError('exclude-edge-ids CSV must contain edge_id')
+        for value in exclusions.edge_id.dropna().unique():
+            parts = str(value).split(':')
+            if len(parts) != 3:
+                continue
+            u, v, key = map(int, parts)
+            if G.has_edge(u, v, key):
+                G.remove_edge(u, v, key)
+                excluded_edges += 1
+        print(f'Diagnostic exclusions applied: {excluded_edges}', flush=True)
     crs = G.graph.get('crs', 32636)
     if isinstance(crs, int):
         crs = f'EPSG:{crs}'
@@ -205,6 +222,7 @@ def main():
         print(f'{a.scenario} batch {batch+1}/{n_batches}: origins {start}-{stop-1}, {time.time()-t0:.1f}s', flush=True)
 
     summary = {'scenario':a.scenario,'status':'computed','origins':n,
+               'excluded_directed_edges':excluded_edges,
                'origin_snap_covered':int(ovalid.sum()),'origin_uncovered':int((~ovalid).sum()),
                'snap_limit_m':a.snap_m,'wait_per_boarding_min':a.wait_min if a.scenario=='B3' else 0,
                'edge_type_counts':edge_counts,'cases':{}}
