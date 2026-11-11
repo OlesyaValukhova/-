@@ -1,0 +1,7 @@
+{
+  "scenario": "B1",
+  "unit": "ready-made BlocksNet block",
+  "directions": 43,
+  "routing_repeated": false,
+  "block_source": "C:\\Users\\olesy\\PycharmProjects\\blocksnet-data\\cities\\saint_petersburg\\data\\blocks_cleaned.geojson"
+}
