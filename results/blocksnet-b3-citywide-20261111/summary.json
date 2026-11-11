@@ -1,0 +1,28 @@
+{
+  "scenario": "B3",
+  "status": "computed",
+  "origins": 30611,
+  "origin_snap_covered": 30224,
+  "origin_uncovered": 387,
+  "snap_limit_m": 250.0,
+  "wait_per_boarding_min": 5.0,
+  "edge_type_counts": {
+    "boarding": 62754,
+    "walk": 1206335,
+    "tram": 1891,
+    "bus": 25642,
+    "trolleybus": 2465,
+    "subway": 130
+  },
+  "cases": {
+    "full_observable": {
+      "venues_total": 1743,
+      "venues_snapped": 1729,
+      "offer_cards": 16067,
+      "eligible_snapped_venues": {
+        "7.0": 1406,
+        "13.0": 959
+      }
+    }
+  }
+}

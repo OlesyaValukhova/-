@@ -1,0 +1,25 @@
+{
+  "graph": "C:\\Users\\olesy\\PycharmProjects\\blocksnet-data\\cities\\saint_petersburg\\saint_petersburg\\graph_intermodal.pickle",
+  "origins": "C:\\Users\\olesy\\OneDrive\\Документы\\Проект по умолчанию\\nir-digital-urbanism\\data\\urban-api-spb-residential-20261110\\residential.geojson",
+  "case": [
+    [
+      "full_observable",
+      "C:\\Users\\olesy\\OneDrive\\Документы\\Проект по умолчанию\\nir-digital-urbanism\\data\\navigator-full-observable-offers-20261111\\all-observable-program-card-coordinate-offers.csv",
+      "C:\\Users\\olesy\\OneDrive\\Документы\\Проект по умолчанию\\nir-digital-urbanism\\data\\navigator-full-observable-offers-20261111\\all-observable-coordinate-venue-proxy.geojson"
+    ]
+  ],
+  "scenario": "B1",
+  "ages": [
+    7.0,
+    13.0
+  ],
+  "thresholds": [
+    10.0,
+    15.0,
+    20.0,
+    30.0
+  ],
+  "snap_m": 250.0,
+  "wait_min": 0,
+  "batch_size": 32
+}
