@@ -1,9 +1,10 @@
 import fs from 'node:fs/promises';
 import {FileBlob,PresentationFile} from '@oai/artifact-tool';
 
-const [source='inputs/itmo_age_accessibility_white_v2.pptx', maps='output', destination='output/age_accessibility_maps_draft_v4.pptx']=process.argv.slice(2);
+const [source='inputs/itmo_age_accessibility_white_v2.pptx', maps='output', destination='output/age_accessibility_maps_draft_v5.pptx']=process.argv.slice(2);
 const p=await PresentationFile.importPptx(await FileBlob.load(source));
 const original=p.slides.items.map(s=>'sl/'+s.id);
+const replacedSlideNotes = String(p.slides.items[15].speakerNotes.text || '');
 for(let i=0;i<p.slides.items.length;i++) {
   const s=p.slides.items[i];
   const counter=s.shapes.items.find(x=>/^\d\d \/ 20$/.test(x.text?.toString()||''));
@@ -19,5 +20,12 @@ for(const [id,label] of [['81','Программирование'],['38','Изо
   additions.push('sl/'+slide.id);
 }
 p.slides.reorder([...original.slice(0,13),...additions,...original.slice(13)]);
+// Replace the generic block-profile slide with its quantitative geographic view.
+const delta=p.slides.add(); delta.background.fill='#FFFFFF';
+const db=await fs.readFile(`${maps}/blocks_delta_81.png`);
+delta.images.add({blob:db.buffer.slice(db.byteOffset,db.byteOffset+db.byteLength),contentType:'image/png',alt:'Медиана парной разницы числа достижимых координат программирования N13 минус N7',fit:'contain',position:{left:0,top:0,width:1280,height:720}});
+delta.speakerNotes.text=replacedSlideNotes+'\nКарта: медиана по жилым точкам квартала парной разницы N13 − N7, а не разность квартальных медиан. N — число уникальных опубликованных координат, достижимых за 30 минут пешком. Менее трёх точек с сетевым покрытием выделены отдельно. Исходный слой: age_profiles_blocks.gpkg, profiles, B1.';
+p.delete(original[15]);
+p.slides.reorder([...original.slice(0,13),...additions,...original.slice(13,15),'sl/'+delta.id,...original.slice(16)]);
 await (await PresentationFile.exportPptx(p)).save(destination);
-for(let i=13;i<15;i++) await fs.writeFile(`output/slide_${i+1}.png`,new Uint8Array(await (await p.slides.items[i].export({format:'png',scale:1})).arrayBuffer()));
+for(const i of [13,14,17]) await fs.writeFile(`output/slide_${i+1}.png`,new Uint8Array(await (await p.slides.items[i].export({format:'png',scale:1})).arrayBuffer()));
