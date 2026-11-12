@@ -1,0 +1,20 @@
+import fs from 'node:fs'; import vm from 'node:vm';
+const source=fs.readFileSync('output/age_accessibility_v6.html','utf8');
+const script=source.match(/<script>([\s\S]*)<\/script>/)[1];
+const callbacks={}, elements={};
+for(const id of ['slide','count','note','prev','next','toggle','notes']) elements[id]={hidden:id==='notes',disabled:false,attrs:{},addEventListener:(k,f)=>callbacks[id+':'+k]=f,setAttribute(k,v){this.attrs[k]=v}};
+const document={getElementById:id=>elements[id],addEventListener:(k,f)=>callbacks['doc:'+k]=f};
+const context={document,location:{hash:'#13'},history:{replaceState(a,b,c){this.hash=c}}};
+vm.runInNewContext(script,context);
+function assert(x,m){if(!x)throw Error(m)}
+assert(elements.count.textContent==='13 / 20','deep link');
+assert(elements.slide.src.startsWith('data:image/png;base64,'),'inline image');
+callbacks['next:click']();assert(elements.count.textContent==='14 / 20','next');
+callbacks['toggle:click']();assert(!elements.notes.hidden && elements.toggle.attrs['aria-expanded']==='true','notes');
+const event=key=>({key,preventDefault(){},altKey:false,ctrlKey:false,metaKey:false});
+callbacks['doc:keydown'](event('End'));assert(elements.count.textContent==='20 / 20'&&elements.next.disabled,'end');
+callbacks['doc:keydown'](event('Home'));assert(elements.count.textContent==='1 / 20'&&elements.prev.disabled,'home');
+const encoded=[...source.matchAll(/data:image\/png;base64,([A-Za-z0-9+/=]+)/g)];
+assert(encoded.length===20,'image count');
+for(const m of encoded)assert(Buffer.from(m[1],'base64').subarray(0,8).equals(Buffer.from([137,80,78,71,13,10,26,10])),'PNG signature');
+console.log('Passed: 20 embedded PNGs, deep links, navigation, bounds and notes logic');
