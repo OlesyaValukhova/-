@@ -1,0 +1,96 @@
+{
+  "year": [
+    {
+      "period": "1918–1960",
+      "buildings": 3998,
+      "covered_all_directions": 3941,
+      "mean_N7": 2.57,
+      "mean_N13": 2.89,
+      "mean_delta_N13_N7": 0.33,
+      "median_nearest_7": 16.37,
+      "median_nearest_13": 15.77
+    },
+    {
+      "period": "1961–1990",
+      "buildings": 8001,
+      "covered_all_directions": 7879,
+      "mean_N7": 3.11,
+      "mean_N13": 3.3,
+      "mean_delta_N13_N7": 0.18,
+      "median_nearest_7": 15.83,
+      "median_nearest_13": 15.43
+    },
+    {
+      "period": "1991+",
+      "buildings": 3712,
+      "covered_all_directions": 3705,
+      "mean_N7": 2.7,
+      "mean_N13": 2.67,
+      "mean_delta_N13_N7": -0.04,
+      "median_nearest_7": 15.96,
+      "median_nearest_13": 16.32
+    },
+    {
+      "period": "до 1918",
+      "buildings": 5691,
+      "covered_all_directions": 5533,
+      "mean_N7": 4.75,
+      "mean_N13": 5.84,
+      "mean_delta_N13_N7": 1.09,
+      "median_nearest_7": 15.77,
+      "median_nearest_13": 14.24
+    },
+    {
+      "period": "missing",
+      "buildings": 9209,
+      "covered_all_directions": 9166,
+      "mean_N7": 1.17,
+      "mean_N13": 1.2,
+      "mean_delta_N13_N7": 0.02,
+      "median_nearest_7": 17.87,
+      "median_nearest_13": 18.2
+    }
+  ],
+  "floors": [
+    {
+      "floors_group": "1–5",
+      "buildings": 19017,
+      "covered_all_directions": 18697,
+      "mean_N7": 2.5,
+      "mean_N13": 2.88,
+      "mean_delta_N13_N7": 0.38,
+      "median_nearest_7": 16.32,
+      "median_nearest_13": 15.82
+    },
+    {
+      "floors_group": "10+",
+      "buildings": 4045,
+      "covered_all_directions": 4023,
+      "mean_N7": 3.28,
+      "mean_N13": 3.19,
+      "mean_delta_N13_N7": -0.09,
+      "median_nearest_7": 15.67,
+      "median_nearest_13": 15.84
+    },
+    {
+      "floors_group": "6–9",
+      "buildings": 4628,
+      "covered_all_directions": 4611,
+      "mean_N7": 3.75,
+      "mean_N13": 4.17,
+      "mean_delta_N13_N7": 0.42,
+      "median_nearest_7": 15.81,
+      "median_nearest_13": 15.16
+    },
+    {
+      "floors_group": "missing",
+      "buildings": 2921,
+      "covered_all_directions": 2893,
+      "mean_N7": 1.52,
+      "mean_N13": 1.59,
+      "mean_delta_N13_N7": 0.07,
+      "median_nearest_7": 18.8,
+      "median_nearest_13": 18.8
+    }
+  ]
+}

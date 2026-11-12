@@ -1,0 +1,282 @@
+{
+  "purpose": "Descriptive B3 audit: existing walk+public-transport results only; no route recalculation.",
+  "inputs": {
+    "residential_buildings": 30611,
+    "b3_directions": 43,
+    "network_covered_all_directions": 30224,
+    "blocks_total": 3330,
+    "blocks_with_3plus_residential_origins": 2246,
+    "attribute_missing": {
+      "year": 9209,
+      "floors": 2921,
+      "residents": 2167,
+      "living_area": 3456,
+      "building_area": 2145
+    }
+  },
+  "building_associations": {
+    "year": [
+      {
+        "period": "1918–1960",
+        "buildings": 3998,
+        "covered_all_directions": 3941,
+        "mean_N7": 2.57,
+        "mean_N13": 2.89,
+        "mean_delta_N13_N7": 0.33,
+        "median_nearest_7": 16.37,
+        "median_nearest_13": 15.77
+      },
+      {
+        "period": "1961–1990",
+        "buildings": 8001,
+        "covered_all_directions": 7879,
+        "mean_N7": 3.11,
+        "mean_N13": 3.3,
+        "mean_delta_N13_N7": 0.18,
+        "median_nearest_7": 15.83,
+        "median_nearest_13": 15.43
+      },
+      {
+        "period": "1991+",
+        "buildings": 3712,
+        "covered_all_directions": 3705,
+        "mean_N7": 2.7,
+        "mean_N13": 2.67,
+        "mean_delta_N13_N7": -0.04,
+        "median_nearest_7": 15.96,
+        "median_nearest_13": 16.32
+      },
+      {
+        "period": "до 1918",
+        "buildings": 5691,
+        "covered_all_directions": 5533,
+        "mean_N7": 4.75,
+        "mean_N13": 5.84,
+        "mean_delta_N13_N7": 1.09,
+        "median_nearest_7": 15.77,
+        "median_nearest_13": 14.24
+      },
+      {
+        "period": "missing",
+        "buildings": 9209,
+        "covered_all_directions": 9166,
+        "mean_N7": 1.17,
+        "mean_N13": 1.2,
+        "mean_delta_N13_N7": 0.02,
+        "median_nearest_7": 17.87,
+        "median_nearest_13": 18.2
+      }
+    ],
+    "floors": [
+      {
+        "floors_group": "1–5",
+        "buildings": 19017,
+        "covered_all_directions": 18697,
+        "mean_N7": 2.5,
+        "mean_N13": 2.88,
+        "mean_delta_N13_N7": 0.38,
+        "median_nearest_7": 16.32,
+        "median_nearest_13": 15.82
+      },
+      {
+        "floors_group": "10+",
+        "buildings": 4045,
+        "covered_all_directions": 4023,
+        "mean_N7": 3.28,
+        "mean_N13": 3.19,
+        "mean_delta_N13_N7": -0.09,
+        "median_nearest_7": 15.67,
+        "median_nearest_13": 15.84
+      },
+      {
+        "floors_group": "6–9",
+        "buildings": 4628,
+        "covered_all_directions": 4611,
+        "mean_N7": 3.75,
+        "mean_N13": 4.17,
+        "mean_delta_N13_N7": 0.42,
+        "median_nearest_7": 15.81,
+        "median_nearest_13": 15.16
+      },
+      {
+        "floors_group": "missing",
+        "buildings": 2921,
+        "covered_all_directions": 2893,
+        "mean_N7": 1.52,
+        "mean_N13": 1.59,
+        "mean_delta_N13_N7": 0.07,
+        "median_nearest_7": 18.8,
+        "median_nearest_13": 18.8
+      }
+    ]
+  },
+  "rank_associations": [
+    {
+      "feature": "year",
+      "N7": {
+        "n": 21058,
+        "rho": -0.327
+      },
+      "N13": {
+        "n": 21058,
+        "rho": -0.426
+      },
+      "delta_N13_N7": {
+        "n": 21058,
+        "rho": -0.489
+      },
+      "within_territory_N7": {
+        "n": 21058,
+        "rho": -0.177
+      },
+      "within_territory_N13": {
+        "n": 21058,
+        "rho": -0.191
+      }
+    },
+    {
+      "feature": "floors",
+      "N7": {
+        "n": 27331,
+        "rho": 0.47
+      },
+      "N13": {
+        "n": 27331,
+        "rho": 0.433
+      },
+      "delta_N13_N7": {
+        "n": 27331,
+        "rho": 0.051
+      },
+      "within_territory_N7": {
+        "n": 27331,
+        "rho": 0.113
+      },
+      "within_territory_N13": {
+        "n": 27331,
+        "rho": 0.104
+      }
+    },
+    {
+      "feature": "residents",
+      "N7": {
+        "n": 28061,
+        "rho": 0.376
+      },
+      "N13": {
+        "n": 28061,
+        "rho": 0.349
+      },
+      "delta_N13_N7": {
+        "n": 28061,
+        "rho": 0.025
+      },
+      "within_territory_N7": {
+        "n": 28061,
+        "rho": 0.1
+      },
+      "within_territory_N13": {
+        "n": 28061,
+        "rho": 0.092
+      }
+    },
+    {
+      "feature": "living",
+      "N7": {
+        "n": 26801,
+        "rho": 0.403
+      },
+      "N13": {
+        "n": 26801,
+        "rho": 0.365
+      },
+      "delta_N13_N7": {
+        "n": 26801,
+        "rho": 0.008
+      },
+      "within_territory_N7": {
+        "n": 26801,
+        "rho": 0.081
+      },
+      "within_territory_N13": {
+        "n": 26801,
+        "rho": 0.068
+      }
+    },
+    {
+      "feature": "area",
+      "N7": {
+        "n": 28083,
+        "rho": 0.426
+      },
+      "N13": {
+        "n": 28083,
+        "rho": 0.409
+      },
+      "delta_N13_N7": {
+        "n": 28083,
+        "rho": 0.105
+      },
+      "within_territory_N7": {
+        "n": 28083,
+        "rho": 0.098
+      },
+      "within_territory_N13": {
+        "n": 28083,
+        "rho": 0.089
+      }
+    }
+  ],
+  "candidate_block_profiles": [
+    {
+      "profile": "смешанный профиль",
+      "blocks": 112,
+      "share_pct": 5,
+      "median_origins": 9,
+      "mean_N7": 2.93,
+      "mean_N13": 2.63,
+      "mean_delta_N13_N7": -0.29
+    },
+    {
+      "profile": "слабое предложение",
+      "blocks": 1011,
+      "share_pct": 45,
+      "median_origins": 8,
+      "mean_N7": 0.87,
+      "mean_N13": 0.82,
+      "mean_delta_N13_N7": -0.05
+    },
+    {
+      "profile": "широкое предложение",
+      "blocks": 1047,
+      "share_pct": 46.6,
+      "median_origins": 10,
+      "mean_N7": 4.68,
+      "mean_N13": 5.42,
+      "mean_delta_N13_N7": 0.74
+    },
+    {
+      "profile": "возрастное расширение",
+      "blocks": 76,
+      "share_pct": 3.4,
+      "median_origins": 8,
+      "mean_N7": 1.73,
+      "mean_N13": 2.88,
+      "mean_delta_N13_N7": 1.15
+    }
+  ],
+  "decision_rule": {
+    "wide": "N7 and N13 at or above city medians",
+    "age_expansion": "upper quartile of N13−N7; assigned after wide",
+    "weak": "both below city medians",
+    "mixed": "remaining blocks"
+  },
+  "interpretation_of_rank_associations": "Spearman rho is descriptive. “within_territory” demeans global ranks within the Urban API municipal-territory field; it reduces, but does not remove, spatial confounding and is not a causal model.",
+  "limitations": [
+    "Urban API supplies point locations, not entrances or footprints; missing building attributes are not imputed.",
+    "Building associations are origin-level descriptive comparisons; they are confounded by location and do not establish a causal effect of built form.",
+    "Block profiles aggregate 43 published directions equally; they measure observable offer proxies, not participation, capacity, price, timetable, safety or independent child mobility.",
+    "The public-transport scenario is a model assumption (including its waiting/transfer representation), not observed journeys.",
+    "Profiles are rule-based candidates, not validated clusters; they require sensitivity tests for time budgets, destination completeness and spatial aggregation before use as a definitive typology."
+  ]
+}
