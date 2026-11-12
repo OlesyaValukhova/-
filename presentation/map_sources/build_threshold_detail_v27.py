@@ -1,0 +1,9 @@
+import pandas as pd,html
+x=pd.read_csv('inputs/maps/threshold_sensitivity_by_direction.csv',dtype={'study_area_id':str});x=x[x.threshold_minutes.isin([15,20,30]) & x.age.isin([7,13])];assert len(x)==258 and x.study_area_id.nunique()==43;assert not x.duplicated(['study_area_id','threshold_minutes','age']).any();assert x.n_valid_origins.eq(30224).all()
+p=x.pivot(index=['study_area_id','study_area_name'],columns=['threshold_minutes','age'],values='share_origins_with_venue_pct').sort_index(level=1)
+rows=[]
+for (id,name),r in p.iterrows():
+ cells=''.join('<td>'+f'{r[t,a]:.1f}'.replace('.',',')+'%</td>' for t in [15,20,30] for a in [7,13]);rows.append('<tr><th scope="row">'+html.escape(name)+'</th>'+cells+'</tr>')
+sec='''<details id="threshold-detail" class="direction-detail" hidden><summary>Показать значения по 43 направлениям</summary><p>B1 · пешком · доля среди 30 224 точек с сетевым покрытием, из которых достижима хотя бы одна опубликованная координата. Значения округлены до десятых. На слайде показана медиана этих долей по направлениям.</p><div class="table-scroll"><table><thead><tr><th scope="col">Направление</th><th scope="col">15 мин · 7 лет</th><th scope="col">15 мин · 13 лет</th><th scope="col">20 мин · 7 лет</th><th scope="col">20 мин · 13 лет</th><th scope="col">30 мин · 7 лет</th><th scope="col">30 мин · 13 лет</th></tr></thead><tbody>'''+''.join(rows)+'''</tbody></table></div><p>Это доли жилых точек, не детей. Пороги — параметры модели, а не нормы. Направления могут пересекаться. <a href="https://github.com/OlesyaValukhova/-/blob/master/results/age-profiles-blocks-b1-20261112-r2/threshold_sensitivity_by_direction.csv">Исходная таблица B1</a>.</p></details>'''
+open('threshold_detail_v27.html','w').write(sec)
+print('rows',len(rows),'median',x.groupby(['threshold_minutes','age']).share_origins_with_venue_pct.median().round(1).to_dict())
