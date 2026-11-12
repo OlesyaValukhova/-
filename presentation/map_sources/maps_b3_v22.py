@@ -1,4 +1,4 @@
-import json, math
+import json, math, base64, gzip
 from pathlib import Path
 import pandas as pd
 import matplotlib
@@ -8,7 +8,11 @@ from matplotlib.patches import Patch
 from matplotlib.collections import PatchCollection
 from make_research_maps import polygon_path
 
-features=json.load(open('blocks.json'))['features']
+geometry_path=Path('blocks.json')
+if geometry_path.exists():
+ features=json.loads(geometry_path.read_text(encoding='utf-8'))['features']
+else:
+ features=json.loads(gzip.decompress(base64.b64decode(Path('blocks_v22.json.gz.b64').read_bytes())))['features']
 frames={name:pd.read_csv(path,dtype={'blocksnet_block_id':str}).set_index('blocksnet_block_id',verify_integrity=True) for name,path in [('program','data1.csv'),('art','data0.csv')]}
 fields=['both_pct','only_7_pct','only_13_pct','neither_pct']
 xy=[p for f in features for poly in f['geometry']['coordinates'] for p in poly[0]]; xs,ys=zip(*xy);bounds=(min(xs),max(xs),min(ys),max(ys))
