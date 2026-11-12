@@ -1,0 +1,12 @@
+import re,json
+p='accessibility_b3_v19.html'
+s=open(p).read();m=re.search(r'const slides=(\[.*?\]);let current=',s,re.S); slides=json.loads(m.group(1));slide=slides[8]
+chart='''<div class="direction-chart"><div class="chart-caption">Доля жилых точек с ≥1 координатой · B1, 30 минут пешком</div><div class="chart-grid"><div class="chart-group"><b>Программирование</b><div class="chart-row"><span>7 лет</span><i><em style="width:46.4%"></em></i><strong>46,4%</strong></div><div class="chart-row"><span>13 лет</span><i><em style="width:63.2%"></em></i><strong>63,2%</strong></div></div><div class="chart-group"><b>ИЗО</b><div class="chart-row"><span>7 лет</span><i><em style="width:85.4%"></em></i><strong>85,4%</strong></div><div class="chart-row"><span>13 лет</span><i><em style="width:81%"></em></i><strong>81,0%</strong></div></div></div></div>'''
+assert slide['body'].endswith('</div>')
+slide['body']=slide['body'][:-6]+chart+'</div>'
+slide['foot']='B1 · 30 минут пешком · жилые точки с сетевым покрытием · Navigator / BlocksNet'
+slide['note']+=' Например, при одинаковом пороге пешей доступности в программировании наблюдаемая доля выше для 13 лет, а в изобразительном искусстве — для 7 лет. Это срез опубликованных координат, а не оценка спроса или числа детей.'
+s=s[:m.start(1)]+json.dumps(slides,ensure_ascii=False)+s[m.end(1):]
+css='''<style>.rework:has(.direction-chart){gap:.7cqw}.rework:has(.direction-chart) .threeaxes>div{padding:4% 6%;min-height:8.2cqw}.rework:has(.direction-chart) .threeaxes p{margin:.4em 0}.rework:has(.direction-chart) .threeaxes b{margin-top:.25cqw}.rework:has(.direction-chart) .bigband{padding:1% 2%;gap:.25cqw}.rework:has(.direction-chart) .bigband b{font-size:clamp(16px,1.7cqw,25px)}.rework:has(.direction-chart) .bigband span{font-size:clamp(11px,1.2cqw,18px)}.direction-chart{width:100%;padding:1% 1.5%;background:#f4f7f7;color:#253c4d}.chart-caption{font-size:clamp(10px,1.08cqw,16px);margin-bottom:.5cqw}.chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:4%}.chart-group>b{font-size:clamp(11px,1.2cqw,18px)}.chart-row{display:grid;grid-template-columns:4em 1fr 4em;align-items:center;gap:.5cqw;font-size:clamp(10px,1.05cqw,15px);margin-top:.3cqw}.chart-row i{display:block;background:#dce5e6;height:.8cqw;min-height:6px}.chart-row em{display:block;height:100%;background:#315b78}.chart-row strong{text-align:right;white-space:nowrap}</style>'''
+s=s.replace('</head>',css+'</head>',1);open('accessibility_b3_v20.html','w').write(s)
+print('slides',len(slides),'chart',s.count('class=\\"direction-chart\\"'))
