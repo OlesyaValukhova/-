@@ -10,9 +10,9 @@ from matplotlib.collections import PatchCollection
 from matplotlib.patches import PathPatch, Patch
 from matplotlib.path import Path
 
-COLORS = ['#526F85', '#D0A56B', '#708C78', '#D7DDE0', '#F2F2F0', '#B9AC9A']
+COLORS = ['#526F85', '#CB9A5A', '#6E8C78', '#BFCAD0', '#EDEDE9', '#9F8D7D']
 LABELS = ['Для обоих возрастов', 'Только для 7 лет', 'Только для 13 лет',
-          'Ни для одного возраста', 'Менее 3 жилых точек с сетью', 'Равенство наиболее частых состояний']
+          'Ни для одного возраста', 'Менее 3 точек с сетью', 'Равенство состояний']
 FIELDS = ['both_pct', 'only_7_pct', 'only_13_pct', 'neither_pct']
 
 def polygon_path(rings):
@@ -61,17 +61,25 @@ def main():
             idx = category(f['properties']); counts[idx] += 1
             for poly in f['geometry']['coordinates']:
                 buckets[idx].append(polygon_path(poly))
-        fig, ax = plt.subplots(figsize=(10, 8), facecolor='white')
+        fig = plt.figure(figsize=(16, 9), facecolor='white')
+        ax = fig.add_axes([.035,.10,.60,.78])
         for i, patches in enumerate(buckets):
             ax.add_collection(PatchCollection(patches, facecolor=COLORS[i], edgecolor='white', linewidth=.12))
         ax.set_xlim(bounds[0],bounds[1]); ax.set_ylim(bounds[2],bounds[3]); ax.set_aspect('equal'); ax.axis('off')
-        ax.set_title(groups[code][0]['properties']['study_area_name'], loc='left', fontsize=17, color='#25313A', pad=9)
+        fig.text(.055,.92,groups[code][0]['properties']['study_area_name'], fontsize=23, color='#25313A')
+        fig.text(.65,.77,'Преобладающее состояние', fontsize=17, color='#25313A')
+        fig.text(.65,.73,'среди жилых точек квартала', fontsize=14, color='#566771')
         handles = [Patch(facecolor=COLORS[i], edgecolor='none', label=LABELS[i]) for i in range(6)]
-        fig.legend(handles=handles, loc='lower center', ncol=2, frameon=False, fontsize=9, bbox_to_anchor=(.5,.085))
-        fig.text(.08,.055,'Преобладающее состояние среди жилых точек квартала · пешком за 30 минут',fontsize=9,color='#3D4A52')
-        fig.text(.08,.03,'Опубликованные координаты Navigator · BlocksNet · B1; не фактические поездки и не наличие мест',fontsize=8,color='#64737C')
-        fig.subplots_adjust(left=.05,right=.95,top=.91,bottom=.22)
-        fig.savefig(args.output / f'blocks_state_{code}.png', dpi=180, facecolor='white')
+        fig.legend(handles=handles, loc='upper left', frameon=False, fontsize=14,
+                   bbox_to_anchor=(.65,.69), labelspacing=.8, handlelength=1.4)
+        fig.text(.65,.30,'Пешком за 30 минут',fontsize=14,color='#25313A')
+        fig.text(.65,.265,'Опубликованные координаты Navigator.\nОтсутствие координаты не доказывает\nотсутствие занятий.',fontsize=11,color='#566771',linespacing=1.5,va='top')
+        fig.text(.055,.04,'BlocksNet · сценарий B1 · не фактические поездки и не наличие мест',fontsize=10,color='#64737C')
+        # UTM 36N has metre units; the bar represents 10,000 m on the map.
+        x0=bounds[0]+(bounds[1]-bounds[0])*.05; y0=bounds[2]+(bounds[3]-bounds[2])*.04
+        ax.plot([x0,x0+10000],[y0,y0],color='#33454f',lw=2)
+        ax.text(x0+5000,y0+(bounds[3]-bounds[2])*.012,'10 км',ha='center',fontsize=9,color='#33454f')
+        fig.savefig(args.output / f'blocks_state_{code}.png', dpi=120, facecolor='white')
         plt.close(fig)
         print(code, dict(sorted(counts.items())))
 
