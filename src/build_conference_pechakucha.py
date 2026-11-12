@@ -84,7 +84,11 @@ def rect(slide,x,y,w,h,fill, radius=False):
 def base_slide(prs, n, kicker='ВОЗРАСТНОЙ ПРОФИЛЬ ПЕШЕЙ ДОСТУПНОСТИ'):
     slide=prs.slides.add_slide(prs.slide_layouts[6]); rect(slide,0,0,W,H,'#FFFFFF'); rect(slide,0,0,.18,H,TEAL)
     add_textbox(slide,.55,.28,9,.25,kicker,8,GREY,True)
-    add_textbox(slide,12.18,.28,.6,.25,f'{n:02d}',9,GREY,True,PP_ALIGN.RIGHT)
+    # A restrained institutional mark: it remains visible without competing
+    # with the research content.
+    rect(slide,10.78,.18,1.02,.42,BLUE,True)
+    add_textbox(slide,10.86,.25,.86,.16,'ИТМО',10,'#FFFFFF',True,PP_ALIGN.CENTER)
+    add_textbox(slide,12.08,.28,.65,.25,f'{n:02d}',9,GREY,True,PP_ALIGN.RIGHT)
     return slide
 
 
@@ -94,7 +98,18 @@ def title(slide,text,sub=None):
 
 
 def image(slide,path,x,y,w,h):
-    slide.shapes.add_picture(str(path), Inches(x), Inches(y), Inches(w), Inches(h))
+    """Place a raster without distorting geography or charts."""
+    with Image.open(path) as im:
+        aspect = im.width / im.height
+    box_aspect = w / h
+    if aspect >= box_aspect:
+        draw_w, draw_h = w, w / aspect
+    else:
+        draw_w, draw_h = h * aspect, h
+    slide.shapes.add_picture(
+        str(path), Inches(x + (w - draw_w) / 2), Inches(y + (h - draw_h) / 2),
+        Inches(draw_w), Inches(draw_h)
+    )
 
 
 def node(slide,x,y,label,color):
@@ -243,7 +258,10 @@ def pdf():
         y=450
         for line in head.split('\n'):
             c.drawCentredString(480,y,line); y-=38
-        c.setFillColor(TEAL); c.setFont('ArialBold',10); c.drawString(45,505,'ВОЗРАСТНОЙ ПРОФИЛЬ ПЕШЕЙ ДОСТУПНОСТИ'); c.drawRightString(915,505,f'{i:02d}')
+        c.setFillColor(TEAL); c.setFont('ArialBold',10); c.drawString(45,505,'ВОЗРАСТНОЙ ПРОФИЛЬ ПЕШЕЙ ДОСТУПНОСТИ')
+        c.setFillColor(BLUE); c.roundRect(792,493,62,24,5,fill=1,stroke=0)
+        c.setFillColorRGB(1,1,1); c.setFont('ArialBold',10); c.drawCentredString(823,501,'ИТМО')
+        c.setFillColor(TEAL); c.setFont('ArialBold',10); c.drawRightString(915,505,f'{i:02d}')
         if asset:
             p=asset if isinstance(asset,Path) else OUT/asset
             im=Image.open(p); iw,ih=im.size; scale=min(760/iw,260/ih); w,h=iw*scale,ih*scale; c.drawImage(ImageReader(im),480-w/2,70,w,h)

@@ -124,7 +124,10 @@ def main():
     print(f'{len(nodes)} nodes, {matrix.nnz} arcs; scenario {a.scenario}', flush=True)
     del G, index, nodes, coords
 
-    origins = gpd.read_file(a.origins).to_crs(crs)
+    # Use pyogrio explicitly: the local Fiona build is incompatible with the
+    # installed GeoPandas version, while pyogrio is present and reads the same
+    # GeoJSON inputs without changing their geometry or attributes.
+    origins = gpd.read_file(a.origins, engine='pyogrio').to_crs(crs)
     origins['origin_id'] = origins.get('origin_id',pd.Series(origins.index,index=origins.index)).astype(str)
     if not origins.origin_id.is_unique:
         raise ValueError('Nonunique origin_id')
@@ -140,7 +143,7 @@ def main():
     for name, offers_path, venues_path in a.case:
         offers = pd.read_csv(offers_path, encoding='utf-8-sig',
                              dtype={'program_id':str,'coordinate_id':str})
-        venues = gpd.read_file(venues_path).to_crs(crs)
+        venues = gpd.read_file(venues_path, engine='pyogrio').to_crs(crs)
         venues['coordinate_id'] = venues.coordinate_id.astype(str)
         if not venues.coordinate_id.is_unique or not offers.program_id.is_unique:
             raise ValueError(f'{name}: duplicate IDs')
