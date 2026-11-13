@@ -2,7 +2,7 @@
 """Aggregate existing citywide B3 point results to the original BlocksNet polygons.
 
 No routing, sum of directions, or imputation. Requires pandas, geopandas,
-shapely >=2 and a spatial-index backend. See README_citywide_b3_v31.md.
+shapely >=2, pyogrio and a spatial-index backend. See README_citywide_b3_v31.md.
 """
 from __future__ import annotations
 import argparse
@@ -59,7 +59,7 @@ def main():
         raise FileExistsError(f'Output directory is not empty: {a.out}')
     import geopandas as gpd
 
-    pts=gpd.read_file(a.origin_geojson)
+    pts=gpd.read_file(a.origin_geojson, engine="pyogrio")
     required={'origin_id','network_covered',N7,N13,'geometry'}
     missing=required-set(pts.columns)
     if missing: raise ValueError(f'Missing origin fields: {sorted(missing)}')
@@ -85,7 +85,7 @@ def main():
         right=pd.to_numeric(check[col+'_csv'],errors='raise')
         if not (left.eq(right) | (left.isna() & right.isna())).all():
             raise ValueError(f'Origin values for {col} differ from CSV')
-    blocks=gpd.read_file(a.blocks)
+    blocks=gpd.read_file(a.blocks, engine="pyogrio")
     if blocks.crs is None: raise ValueError('Blocks have no CRS')
     blocks=blocks.to_crs(32636)
     blocks[KEY]=blocks.geometry.map(lambda geom: hashlib.sha256(geom.normalize().wkb).hexdigest()[:16])
@@ -120,7 +120,7 @@ def main():
     a.out.mkdir(parents=True,exist_ok=True)
     result.to_csv(a.out/'b3_citywide_age_delta_by_block.csv',index=False)
     geo=blocks[[KEY,'geometry']].merge(result,on=KEY,how='inner',validate='one_to_one').to_crs(4326)
-    geo.to_file(a.out/'b3_citywide_age_delta_by_block.geojson',driver='GeoJSON')
+    geo.to_file(a.out/'b3_citywide_age_delta_by_block.geojson',driver='GeoJSON',engine='pyogrio')
     (a.out/'manifest.json').write_text(json.dumps(qa,ensure_ascii=False,indent=2),encoding='utf-8')
     print(json.dumps(qa,ensure_ascii=False,indent=2))
 
