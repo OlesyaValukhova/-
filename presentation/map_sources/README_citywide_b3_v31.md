@@ -9,7 +9,7 @@
 3. Исходные кварталы BlocksNet `blocks_cleaned.geojson`: именно полный файл, который использовал агент; его путь указан в [исходном скрипте агрегации](https://github.com/OlesyaValukhova/-/blob/master/src/aggregate_b3_age_profiles_blocks.py). Он не опубликован в репозитории.
 4. [Контрольная квартальная таблица B3 для ИЗО](https://github.com/OlesyaValukhova/-/blob/master/results/age-profiles-blocks-b3-20261112/focus-directions/area_38_art_blocks_b3.csv), blob `382efd074ab35791aab1d190fdce1ecfd6c603ec`. Она нужна **только для проверки привязки и чисел**, а не для расчёта общего предложения.
 
-В Python с pandas, geopandas, shapely 2 и пространственным индексом:
+В Python с pandas, geopandas, shapely 2, pyogrio и пространственным индексом (pyogrio используется для чтения и записи, как в расчётах агента):
 
 ```bash
 python aggregate_citywide_b3_v31.py \
