@@ -8,6 +8,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 from pathlib import Path
 import pandas as pd
 
@@ -16,16 +17,23 @@ N13 = 'age_13_N_venue_proxy_within_30min'
 KEY = 'blocksnet_block_id'
 
 
+def normalized_coverage(series: pd.Series) -> pd.Series:
+    return (series.astype('string').str.lower().str.strip()
+            .replace({'1':'true','0':'false','1.0':'true','0.0':'false'}))
+
+
 def summarize(joined: pd.DataFrame) -> pd.DataFrame:
     """Pair at each covered origin first; unknowns and uncovered are not zero."""
     x = joined.copy()
-    coverage = x.network_covered.astype('string').str.lower().str.strip()
+    coverage = normalized_coverage(x.network_covered)
     if not coverage.isin(['true', 'false']).all():
         raise ValueError('network_covered must be an explicit true/false at every origin')
     x['covered'] = coverage.eq('true')
     x[N7] = pd.to_numeric(x[N7], errors='raise')
     x[N13] = pd.to_numeric(x[N13], errors='raise')
     x['valid'] = x.covered & x[N7].notna() & x[N13].notna()
+    if not x.loc[x.valid, [N7, N13]].apply(lambda col: col.map(math.isfinite)).all().all():
+        raise ValueError('Non-finite reachable-coordinate count')
     if ((x.loc[x.valid, [N7, N13]] < 0).any().any()):
         raise ValueError('Negative reachable-coordinate count')
     x['delta'] = (x[N13] - x[N7]).where(x.valid)
@@ -69,8 +77,8 @@ def main():
         reference[['origin_id','network_covered',N7,N13]],on='origin_id',how='outer',
         suffixes=('_geo','_csv'),indicator=True,validate='one_to_one')
     if not check['_merge'].eq('both').all(): raise ValueError('Origin ID sets differ')
-    left=check.network_covered_geo.astype('string').str.lower().str.strip()
-    right=check.network_covered_csv.astype('string').str.lower().str.strip()
+    left=normalized_coverage(check.network_covered_geo)
+    right=normalized_coverage(check.network_covered_csv)
     if not left.eq(right).all(): raise ValueError('Origin coverage differs from CSV')
     for col in [N7,N13]:
         left=pd.to_numeric(check[col+'_geo'],errors='raise')
@@ -87,7 +95,7 @@ def main():
     x=gpd.sjoin(pts.to_crs(32636),blocks[[KEY,'geometry']],how='left',predicate='within').drop(columns='index_right')
     if x.origin_id.duplicated().any(): raise ValueError('An origin matches multiple blocks')
     assigned=int(x[KEY].notna().sum())
-    coverage=x.network_covered.astype('string').str.lower().str.strip()
+    coverage=normalized_coverage(x.network_covered)
     if assigned!=30609 or int(coverage.eq('true').sum())!=30224:
         raise ValueError(f'Unexpected join/coverage: assigned={assigned}, covered={coverage.eq("true").sum()}')
     result=summarize(x)
