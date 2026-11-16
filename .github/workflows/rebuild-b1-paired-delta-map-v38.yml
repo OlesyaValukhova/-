@@ -10,18 +10,27 @@ on:
       - 'presentation/map_sources/b1_81.csv'
       - 'presentation/map_sources/b1_38.csv'
       - '.github/workflows/rebuild-b1-paired-delta-map-v38.yml'
+  pull_request:
+    branches:
+      - codex/presentation-b1-denominator-v37
+    paths:
+      - 'presentation/map_sources/build_b1_paired_delta_map_v38.py'
+      - 'presentation/map_sources/blocks_v22.json.gz.b64'
+      - 'presentation/map_sources/b1_81.csv'
+      - 'presentation/map_sources/b1_38.csv'
+      - '.github/workflows/rebuild-b1-paired-delta-map-v38.yml'
 
 permissions:
   contents: write
 
 jobs:
   build:
-    if: ${{ !contains(github.event.head_commit.message, 'Build paired B1 delta map v38') }}
+    if: ${{ github.event_name == 'pull_request' || !contains(github.event.head_commit.message, 'Build paired B1 delta map v38') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.ref_name }}
+          ref: ${{ github.event.pull_request.head.ref || github.ref_name }}
           fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
@@ -39,5 +48,6 @@ jobs:
           git add presentation/assets_v38/paired_delta_programming_art_b1.svg presentation/map_sources/paired_delta_map_audit_v38.json
           if ! git diff --cached --quiet; then
             git commit -m "Build paired B1 delta map v38"
-            git push origin HEAD:${GITHUB_REF_NAME}
+            TARGET_BRANCH='${{ github.event.pull_request.head.ref || github.ref_name }}'
+            git push origin HEAD:${TARGET_BRANCH}
           fi
