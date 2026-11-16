@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify v36 slide assets and weighted B1 accessibility shares from source CSVs.
+"""Verify v36 slides and B1 summary values from repository source CSVs.
 
 Uses only the Python standard library. No routing or map generation is performed.
 Run from any directory:
@@ -23,6 +23,7 @@ CSV_FILES = {
     "programming": HERE / "b1_81.csv",
     "art": HERE / "b1_38.csv",
 }
+DIRECTION_CSV = HERE / "b1-direction-summary.csv"
 EXPECTED_ACCESS = {
     "programming": (46.4132, 63.2486),
     "art": (85.4047, 80.9841),
@@ -35,6 +36,11 @@ REQUIRED_MAPS = {
     13: "art_states_b1.svg",
     15: "programming_delta_b1.svg",
     19: "network_coverage_b1.svg",
+}
+EXPECTED_MEDIANS = {
+    "15": (26.68, 30.94),
+    "20": (38.22, 42.03),
+    "30": (56.02, 61.85),
 }
 
 
@@ -97,7 +103,10 @@ def summarize(path: Path) -> dict:
             )[winners[0]]
             state[key] += 1
 
-            difference = float(row["median_delta_N"])
+            raw_difference = row["median_delta_N"].strip()
+            difference = float(raw_difference)
+            if not math.isfinite(difference):
+                raise ValueError(f"{path.name}: non-finite median delta")
             if difference < -2:
                 delta["lt_minus2"] += 1
             elif difference < 0:
@@ -136,16 +145,65 @@ def summarize(path: Path) -> dict:
     }
 
 
-def load_slides() -> tuple[str, list[dict]]:
+def median(values: list[float]) -> float:
+    ordered = sorted(values)
+    middle = len(ordered) // 2
+    if len(ordered) % 2:
+        return ordered[middle]
+    return (ordered[middle - 1] + ordered[middle]) / 2
+
+
+def verify_direction_summary(audit: dict) -> dict:
+    rows = read_rows(DIRECTION_CSV)
+    ids = [row["study_area_id"] for row in rows]
+    if len(rows) != 43 or len(set(ids)) != 43:
+        raise ValueError("Direction summary must contain 43 unique study areas")
+    if {int(row["origins_network_covered"]) for row in rows} != {30224}:
+        raise ValueError("Direction summary denominator differs from 30,224")
+
+    differences = [
+        float(row["age7_zero_pct_30min"]) - float(row["age13_zero_pct_30min"])
+        for row in rows
+    ]
+    positive = sum(value > 0 for value in differences)
+    negative = sum(value < 0 for value in differences)
+    zero = sum(value == 0 for value in differences)
+    chart = audit["direction_difference_chart"]
+    if (positive, negative, zero) != (
+        chart["positive_age13"], chart["negative_age7"], chart["zero"]
+    ):
+        raise ValueError("43-direction sign counts do not match the manifest")
+    if round(min(differences), 2) != chart["min"] or round(max(differences), 2) != chart["max"]:
+        raise ValueError("43-direction range does not match the manifest")
+
+    medians = {}
+    for threshold, expected in EXPECTED_MEDIANS.items():
+        age7 = median([100 - float(row[f"age7_zero_pct_{threshold}min"]) for row in rows])
+        age13 = median([100 - float(row[f"age13_zero_pct_{threshold}min"]) for row in rows])
+        stored = audit["threshold_sensitivity_medians"]["values"][threshold]
+        if abs(age7 - expected[0]) > 0.01 or abs(age13 - expected[1]) > 0.01:
+            raise ValueError(f"Threshold {threshold}: medians do not match B1 report")
+        if abs(age7 - stored["age7"]) > 0.001 or abs(age13 - stored["age13"]) > 0.001:
+            raise ValueError(f"Threshold {threshold}: medians do not match manifest")
+        medians[threshold] = {"age7": round(age7, 2), "age13": round(age13, 2)}
+
+    return {
+        "directions": len(rows),
+        "positive_age13": positive,
+        "negative_age7": negative,
+        "zero": zero,
+        "min_pp": round(min(differences), 2),
+        "max_pp": round(max(differences), 2),
+        "threshold_sensitivity_medians": medians,
+    }
+
+
+def verify_slides() -> dict:
     source = HTML.read_text(encoding="utf-8")
     match = re.search(r"const slides=(\[.*?\]);\s*let current=", source, re.S)
     if not match:
         raise ValueError("Cannot locate serialized slides in HTML")
-    return source, json.loads(match.group(1))
-
-
-def verify_slides() -> dict:
-    source, slides = load_slides()
+    slides = json.loads(match.group(1))
     if len(slides) != 20:
         raise ValueError(f"Expected 20 slides, got {len(slides)}")
     for number, slide in enumerate(slides, 1):
@@ -160,8 +218,18 @@ def verify_slides() -> dict:
             raise ValueError(f"Slide {number}: missing required map or alt text")
         if not (PRESENTATION / "assets_v35" / filename).is_file():
             raise ValueError(f"Missing required map asset: {filename}")
+    for asset in ("art_delta_b1.svg",):
+        if not (PRESENTATION / "assets_v35" / asset).is_file():
+            raise ValueError(f"Missing toggle asset: {asset}")
+    if not (PRESENTATION / "assets_v32" / "logo.png").is_file():
+        raise ValueError("Missing ITMO logo asset")
     if "assets_v35/art_delta_b1.svg" not in source or "current!==12" not in source:
         raise ValueError("Slide 13 art-delta toggle is missing")
+    if "30 224" not in slides[8].get("detail", "") or "30 222" not in slides[8].get("detail", ""):
+        raise ValueError("Slide 9 notes do not explain the two denominators")
+    for value in ("26,7%", "30,9%", "38,2%", "42,0%", "56,0%", "61,9%"):
+        if value not in slides[15]["body"]:
+            raise ValueError(f"Slide 16 is missing threshold value {value}")
     return {"slides": len(slides), "required_map_slides": list(REQUIRED_MAPS)}
 
 
@@ -185,7 +253,7 @@ def main() -> None:
         if actual["coverage_classes"] != expected["coverage_classes"]:
             raise ValueError(f"{name}: manifest mismatch in coverage_classes")
         report["directions"][name] = actual
-
+    report["direction_summary"] = verify_direction_summary(audit)
     print(json.dumps(report, ensure_ascii=False, indent=2))
 
 
