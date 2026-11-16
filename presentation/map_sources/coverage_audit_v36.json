@@ -1,0 +1,186 @@
+{
+  "version": "v36",
+  "scenario": {
+    "name": "B1",
+    "mode": "walking",
+    "threshold_minutes": 30,
+    "ages": [
+      7,
+      13
+    ],
+    "origin_snap_limit_m": 250,
+    "crs": "EPSG:32636"
+  },
+  "source_date": "2026-11-09",
+  "geometry": {
+    "file": "presentation/map_sources/blocks_v22.json.gz.b64",
+    "feature_count": 3330,
+    "crs": "EPSG:32636"
+  },
+  "origin_accounting": {
+    "input_origins": 30611,
+    "network_covered": 30224,
+    "network_uncovered": 387,
+    "network_uncovered_pct": 1.2642,
+    "assigned_to_blocks": 30609,
+    "unassigned_to_blocks": 2,
+    "covered_and_assigned": 30222,
+    "covered_and_assigned_pct": 98.7293
+  },
+  "directions": {
+    "programming": {
+      "rows": 3330,
+      "n_origins": 30609,
+      "n_valid": 30222,
+      "n_uncovered": 387,
+      "state_counts": {
+        "both": 975,
+        "only7": 55,
+        "only13": 459,
+        "neither": 749,
+        "tie": 8,
+        "low": 1020,
+        "no_network_covered": 64
+      },
+      "delta_bins": {
+        "lt_minus2": 6,
+        "minus2_to_zero": 207,
+        "zero": 971,
+        "zero_to_2": 709,
+        "gt2": 353
+      },
+      "delta_sign": {
+        "negative": 213,
+        "zero": 971,
+        "positive": 1062
+      },
+      "weighted_access_pct": {
+        "age7": 46.4132,
+        "age13": 63.2486
+      },
+      "coverage_classes": {
+        "no_uncovered_origins": 3265,
+        "partial": 1,
+        "all_origins_uncovered": 64,
+        "no_origins": 0
+      }
+    },
+    "art": {
+      "rows": 3330,
+      "n_origins": 30609,
+      "n_valid": 30222,
+      "n_uncovered": 387,
+      "state_counts": {
+        "both": 1818,
+        "only7": 113,
+        "only13": 26,
+        "neither": 283,
+        "tie": 6,
+        "low": 1020,
+        "no_network_covered": 64
+      },
+      "delta_bins": {
+        "lt_minus2": 864,
+        "minus2_to_zero": 549,
+        "zero": 597,
+        "zero_to_2": 229,
+        "gt2": 7
+      },
+      "delta_sign": {
+        "negative": 1413,
+        "zero": 597,
+        "positive": 236
+      },
+      "weighted_access_pct": {
+        "age7": 85.4047,
+        "age13": 80.9841
+      },
+      "coverage_classes": {
+        "no_uncovered_origins": 3265,
+        "partial": 1,
+        "all_origins_uncovered": 64,
+        "no_origins": 0
+      }
+    }
+  },
+  "map_assets": [
+    "programming_states_b1.svg",
+    "art_states_b1.svg",
+    "programming_delta_b1.svg",
+    "art_delta_b1.svg",
+    "network_coverage_b1.svg"
+  ],
+  "interpretation_limits": [
+    "N is the number of unique published Navigator coordinates, not groups, available places or participants.",
+    "The modal state is aggregated from residential origins in each block and requires at least three valid origins.",
+    "The both-ages state means at least one eligible coordinate for each age slice; it does not require the same coordinate.",
+    "A zero paired difference means equal N13 and N7; it can be zero for both ages or equal positive counts.",
+    "The network map is a diagnostic of origin snapping within 250 m, not an accessibility result.",
+    "Uncovered or unassigned origins are excluded from the relevant denominators, not coded as zero."
+  ],
+  "provenance": {
+    "block_manifest": "https://github.com/OlesyaValukhova/-/blob/master/results/age-profiles-blocks-b1-20261112-r2/manifest.json",
+    "b1_report": "https://github.com/OlesyaValukhova/-/blob/master/results/age-profiles-blocks-b1-20261112-r2/REPORT.md",
+    "direction_report": "https://github.com/OlesyaValukhova/-/blob/master/results/direction-age-maps-b1-20261111/REPORT.md"
+  },
+  "direction_difference_chart": {
+    "source": "presentation/map_sources/b1-direction-summary.csv",
+    "rows": 43,
+    "unique_study_areas": 43,
+    "origins_network_covered_per_direction": 30224,
+    "formula": "(100 - age13_zero_pct_30min) - (100 - age7_zero_pct_30min)",
+    "unit": "percentage points",
+    "positive_age13": 24,
+    "negative_age7": 19,
+    "zero": 0,
+    "min": -16.98,
+    "max": 47.14,
+    "output": "presentation/assets_v35/directions_chart_b1.svg"
+  },
+  "weighted_access_pct_definition": "For each age, sum the block-level percentage of origins with at least one eligible coordinate multiplied by n_valid, then divide by the total n_valid and multiply by 100. The source percentages are both_pct + only_7_pct for age 7 and both_pct + only_13_pct for age 13.",
+  "audit_correction": {
+    "source_manifest": "coverage_audit_v35.json",
+    "source_csvs": {
+      "programming": {
+        "path": "b1_81.csv",
+        "blob_sha": "2af58483d2a6bb271edea8e297e3ceb14f52a88b"
+      },
+      "art": {
+        "path": "b1_38.csv",
+        "blob_sha": "84c0ab83efbf45641effc82991ad8568cb660d16"
+      }
+    },
+    "previous_weighted_access_pct": {
+      "programming": {
+        "age7": 47.1315,
+        "age13": 64.1485
+      },
+      "art": {
+        "age7": 86.1186,
+        "age13": 81.8418
+      }
+    },
+    "corrected_weighted_access_pct": {
+      "programming": {
+        "age7": 46.4132,
+        "age13": 63.2486
+      },
+      "art": {
+        "age7": 85.4047,
+        "age13": 80.9841
+      }
+    },
+    "method": "sum((both_pct + only_age_pct) * n_valid / 100) / sum(n_valid) * 100",
+    "control_values_from_b1_report": {
+      "programming": {
+        "age7": 46.4132,
+        "age13": 63.2486
+      },
+      "art": {
+        "age7": 85.4047,
+        "age13": 80.9841
+      }
+    },
+    "note": "The v35 manifest values did not reproduce from its own source CSVs. Counts, modal states, paired-difference bins, coverage classes and 43-direction summary were independently recomputed and matched; only weighted_access_pct required correction."
+  }
+}
