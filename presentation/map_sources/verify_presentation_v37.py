@@ -238,6 +238,10 @@ def verify_slides(audit: dict) -> dict:
         raise ValueError("Slide 9 must show the 30,222 denominator in its caption and footnote")
     if "30 224" not in slides[10].get("foot", ""):
         raise ValueError("Slide 11 must retain the 30,224 direction-level denominator")
+    if "30 224 сетево-покрытые точки на направление" not in slides[15].get("foot", ""):
+        raise ValueError("Slide 16 must state the 30,224 per-direction denominator")
+    if "для каждого направления знаменатель — 30 224" not in slides[15].get("note", ""):
+        raise ValueError("Slide 16 note must explain the per-direction denominator")
     if "30 222" not in slides[13].get("foot", ""):
         raise ValueError("Slide 14 must retain the 30,222 quarterly denominator")
     for direction in ("programming", "art"):
