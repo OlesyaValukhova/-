@@ -33,6 +33,7 @@ EXPECTED_ORIGINS_ASSIGNED = 30609
 EXPECTED_COVERED = 30224
 EXPECTED_UNCOVERED = 387
 EXPECTED_COVERED_ASSIGNED = 30222
+EXPECTED_UNASSIGNED = 2
 
 STATE_COLORS = {
     "both": "#315B78", "only7": "#C08A4B", "only13": "#6F8F82",
@@ -74,6 +75,9 @@ def load_and_validate(features):
     geom_ids = {str(f["properties"]["blocksnet_block_id"]) for f in features}
     summaries = {}
     coverage_signature = None
+    coverage_by_block = None
+    if EXPECTED_ORIGINS_ASSIGNED + EXPECTED_UNASSIGNED != 30611 or EXPECTED_COVERED_ASSIGNED + EXPECTED_UNASSIGNED != EXPECTED_COVERED:
+        raise ValueError("Origin accounting constants are inconsistent")
     for name, df in frames.items():
         if len(df) != EXPECTED_BLOCKS or df["blocksnet_block_id"].duplicated().any():
             raise ValueError(f"{name}: expected 3,330 unique block rows")
@@ -93,6 +97,15 @@ def load_and_validate(features):
         }
         if coverage != {"no_uncovered_origins": 3265, "partial": 1, "all_origins_uncovered": 64}:
             raise ValueError(f"{name}: unexpected coverage classes {coverage}")
+        partial = df.loc[(df.n_uncovered > 0) & (df.n_uncovered < df.n_origins)]
+        partial_rate = (partial.n_uncovered / partial.n_origins * 100).round(1).tolist()
+        if partial_rate != [5.3]:
+            raise ValueError(f"{name}: expected one 5.3% partial-coverage block, got {partial_rate}")
+        coverage_rows = df.set_index("blocksnet_block_id")[["n_origins", "n_valid", "n_uncovered"]].sort_index()
+        if coverage_by_block is None:
+            coverage_by_block = coverage_rows
+        elif not coverage_by_block.equals(coverage_rows):
+            raise ValueError("Per-block network coverage differs between directions")
         state_counts = Counter()
         delta_bins = Counter()
         delta_sign = Counter()
@@ -128,10 +141,20 @@ def load_and_validate(features):
                     delta_bins["zero_to_2" if d <= 2 else "gt2"] += 1
         if sum(state_counts.values()) != EXPECTED_BLOCKS:
             raise ValueError(f"{name}: state classes do not sum to 3,330")
+        expected_states = ({"both": 975, "only7": 55, "only13": 459, "neither": 749, "tie": 8, "low": 1020, "nocover": 64}
+                           if name == "programming" else
+                           {"both": 1818, "only7": 113, "only13": 26, "neither": 283, "tie": 6, "low": 1020, "nocover": 64})
+        if dict(state_counts) != expected_states:
+            raise ValueError(f"{name}: unexpected modal-state counts {dict(state_counts)}")
         if int((df.n_valid == 0).sum()) != 64 or int(((df.n_valid > 0) & (df.n_valid < 3)).sum()) != 1020:
             raise ValueError(f"{name}: unexpected low-sample classes")
         if sum(delta_sign.values()) != 2246 or delta_sign["noresult"]:
             raise ValueError(f"{name}: delta denominator is not 2,246")
+        expected_delta = ({"lt_minus2": 6, "minus2_to_zero": 207, "zero": 971, "zero_to_2": 709, "gt2": 353}
+                          if name == "programming" else
+                          {"lt_minus2": 864, "minus2_to_zero": 549, "zero": 597, "zero_to_2": 229, "gt2": 7})
+        if dict(delta_bins) != expected_delta:
+            raise ValueError(f"{name}: unexpected paired-difference bins {dict(delta_bins)}")
         signature = (totals, coverage)
         if coverage_signature is None:
             coverage_signature = signature
