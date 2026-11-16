@@ -112,21 +112,21 @@ def load_and_validate(features):
         weighted7 = weighted13 = 0.0
         for row in df.to_dict("records"):
             n = int(row["n_valid"])
+            vals = [row[k] for k in ("both_pct", "only_7_pct", "only_13_pct", "neither_pct")]
+            if n > 0:
+                if any(pd.isna(v) for v in vals):
+                    raise ValueError(f"{name}: missing age-state shares for a covered block")
+                weighted7 += (vals[0] + vals[1]) * n / 100
+                weighted13 += (vals[0] + vals[2]) * n / 100
             if n == 0:
                 state_counts["nocover"] += 1
             elif n < 3:
                 state_counts["low"] += 1
             else:
-                vals = [row[k] for k in ("both_pct", "only_7_pct", "only_13_pct", "neither_pct")]
-                if any(pd.isna(v) for v in vals):
-                    state_counts["noresult"] += 1
-                else:
-                    m = max(vals)
-                    winners = [i for i, v in enumerate(vals) if abs(v - m) < 1e-7]
-                    key = "tie" if len(winners) > 1 else ("both", "only7", "only13", "neither")[winners[0]]
-                    state_counts[key] += 1
-                    weighted7 += (vals[0] + vals[1]) * n / 100
-                    weighted13 += (vals[0] + vals[2]) * n / 100
+                m = max(vals)
+                winners = [i for i, v in enumerate(vals) if abs(v - m) < 1e-7]
+                key = "tie" if len(winners) > 1 else ("both", "only7", "only13", "neither")[winners[0]]
+                state_counts[key] += 1
                 d = row["median_delta_N"]
                 if pd.isna(d):
                     delta_sign["noresult"] += 1
