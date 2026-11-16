@@ -181,6 +181,26 @@
         "age13": 80.9841
       }
     },
-    "note": "The v35 manifest values did not reproduce from its own source CSVs. Counts, modal states, paired-difference bins, coverage classes and 43-direction summary were independently recomputed and matched; only weighted_access_pct required correction."
+    "note": "В прежней сводке v35 значения weighted_access_pct не воспроизводились из собственных исходных CSV. Они пересчитаны по n_valid и согласуются с контрольными значениями отчёта B1."
+  },
+  "threshold_sensitivity_medians": {
+    "source": "b1-direction-summary.csv",
+    "directions": 43,
+    "origins_network_covered_per_direction": 30224,
+    "method": "median across 43 directions of 100 - age*_zero_pct_*min",
+    "values": {
+      "15": {
+        "age7": 26.68,
+        "age13": 30.94
+      },
+      "20": {
+        "age7": 38.22,
+        "age13": 42.03
+      },
+      "30": {
+        "age7": 56.02,
+        "age13": 61.85
+      }
+    }
   }
 }
