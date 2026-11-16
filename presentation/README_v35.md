@@ -7,6 +7,7 @@
 
 ## Что изменено
 - Четыре квартальные карты программирования и ИЗО пересобраны в SVG из фактической геометрии BlocksNet и таблиц `b1_81.csv` / `b1_38.csv`.
+- График 43 направлений также пересобран в SVG из `b1-direction-summary.csv`; он показывает разницу долей точек с ≥1 координатой (13 лет минус 7 лет) в процентных пунктах.
 - Добавлена пятая карта — доля жилых точек без сетевого покрытия по кварталам. Это диагностическая карта привязки исходных точек, а не карта доступности занятий.
 - Все карты имеют один экстент, масштаб, EPSG:32636, формат 16:9, белый фон и общую палитру.
 - В легендах раздельно показаны 1–2 валидные точки и отсутствие сетево-покрытых точек.
@@ -22,8 +23,11 @@
 - `assets_v35/programming_delta_b1.svg`
 - `assets_v35/art_delta_b1.svg`
 - `assets_v35/network_coverage_b1.svg`
+- `assets_v35/directions_chart_b1.svg`
 - `map_sources/maps_b1_v24.py` — воспроизводимый генератор.
 - `map_sources/coverage_audit_v35.json` — сводка QA и ограничений.
+- `map_sources/b1-direction-summary.csv` — источник графика по 43 направлениям.
+- `map_sources/build_direction_chart_v35.py` — воспроизводимый генератор графика.
 - `map_sources/README_v35_maps.md` — метод карт и запуск.
 - `speaker_script_v10.md` — речь, 20 пунктов.
 - `QA_v35.md` — проверки и оставшиеся ограничения.
@@ -32,6 +36,7 @@
 Из корня репозитория:
 ```bash
 python presentation/map_sources/maps_b1_v24.py
+python presentation/map_sources/build_direction_chart_v35.py
 ```
 Нужны Python 3.10+, pandas и matplotlib. Маршрутизация не запускается; используются готовые CSV и геометрия, сохранённые в `map_sources`.
 
