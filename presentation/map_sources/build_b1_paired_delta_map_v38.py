@@ -206,7 +206,7 @@ def render(features, frames, summaries):
                    f"+ {summary['positive']:,}").replace(",", " ")
         fig.text(rect[0], .175, caption, fontsize=9, color="#52636B")
 
-    handles = [Patch(facecolor=COLORS[k], edgecolor="none", label=LABELS[k]) for k in ORDER]
+    present = {k for summary in summaries.values() for k, count in summary["class_counts"].items() if count}\n    handles = [Patch(facecolor=COLORS[k], edgecolor="none", label=LABELS[k]) for k in ORDER if k in present]
     fig.legend(handles=handles, loc="lower center", bbox_to_anchor=(.5, .105),
                ncol=4, frameon=False, fontsize=9, columnspacing=1.6, handlelength=1.2)
     fig.text(.04, .045,
