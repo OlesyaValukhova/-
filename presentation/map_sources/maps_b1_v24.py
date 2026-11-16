@@ -160,6 +160,10 @@ def load_and_validate(features):
             coverage_signature = signature
         elif coverage_signature != signature:
             raise ValueError("Network coverage differs between directions")
+        expected_access = (46.4132, 63.2486) if name == "programming" else (85.4047, 80.9841)
+        actual_access = (weighted7 / EXPECTED_COVERED_ASSIGNED * 100, weighted13 / EXPECTED_COVERED_ASSIGNED * 100)
+        if any(abs(a - e) > 0.01 for a, e in zip(actual_access, expected_access)):
+            raise ValueError(f"{name}: weighted access shares do not match source control values {actual_access}")
         summaries[name] = {
             "n_origins": totals[0], "n_valid": totals[1], "n_uncovered": totals[2],
             "state_counts": dict(state_counts), "delta_bins": dict(delta_bins),
