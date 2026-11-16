@@ -42,3 +42,9 @@ python presentation/map_sources/verify_presentation_v37.py
 - Генератор карт v24 повторно не запускался; SVG v35 оставлены без изменений.
 - Географические подписи районов, водных объектов и улиц не добавлены: проверенный слой ориентиров не подключён.
 - N — число уникальных опубликованных координат Navigator, а не число групп, свободных мест, детей или участников.
+
+## Alignment with the current research brief
+
+The latest methodological instruction in `second_brain_for_nir` is commit [70b96cb, 12 November 2026](https://github.com/OlesyaValukhova/second_brain_for_nir/commit/70b96cb98885949ab678cf38051336b9ac675da8). It defines the residential origin as the calculation unit and existing BlocksNet blocks as the territorial aggregation unit. Point-level pairing must precede block aggregation; centroids and a new 500 × 500 m grid are out of scope.
+
+The repository currently exposes the block-level B1 tables and 43-direction summary used here, but not the raw point-level B1 results and their residential-point geometry. The B1 report also states that exact geometries and point-level values remain local and are not published. Therefore v37 does not attempt to reconstruct point-level maps from block aggregates. The existing maps are explicitly block summaries; producing point-level maps requires the original point-level outputs and geometry.
