@@ -1,0 +1,384 @@
+{
+  "version": "v38",
+  "source": "presentation/map_sources/b1-direction-summary.csv",
+  "source_date": "2026-11-09",
+  "scenario": {
+    "name": "B1",
+    "mode": "walking",
+    "ages": [
+      7,
+      13
+    ],
+    "threshold_minutes": 30,
+    "directions": 43,
+    "network_covered_origins_per_direction": 30224
+  },
+  "direction_comparison": {
+    "metric": "100 - age*_zero_pct_30min",
+    "delta": "age13_accessibility_pct - age7_accessibility_pct",
+    "positive_age13": 24,
+    "negative_age7": 19,
+    "zero": 0,
+    "min_delta_pp": -16.98,
+    "max_delta_pp": 47.14,
+    "sort": "descending delta; positive values first",
+    "rows": [
+      {
+        "study_area_id": "27",
+        "name": "Военно-патриотические объединения",
+        "age7_access_pct": 25.66,
+        "age13_access_pct": 72.8,
+        "delta_pp": 47.14
+      },
+      {
+        "study_area_id": "76",
+        "name": "Спортивный туризм",
+        "age7_access_pct": 13.93,
+        "age13_access_pct": 54.62,
+        "delta_pp": 40.69
+      },
+      {
+        "study_area_id": "26",
+        "name": "Школа актива и/или РДШ",
+        "age7_access_pct": 19.37,
+        "age13_access_pct": 55.41,
+        "delta_pp": 36.04
+      },
+      {
+        "study_area_id": "86",
+        "name": "3D моделирование, прототипирование",
+        "age7_access_pct": 16.8,
+        "age13_access_pct": 51.68,
+        "delta_pp": 34.88
+      },
+      {
+        "study_area_id": "22",
+        "name": "Волонтерская работа",
+        "age7_access_pct": 26.99,
+        "age13_access_pct": 59.77,
+        "delta_pp": 32.78
+      },
+      {
+        "study_area_id": "34",
+        "name": "Химия",
+        "age7_access_pct": 17.23,
+        "age13_access_pct": 45.01,
+        "delta_pp": 27.78
+      },
+      {
+        "study_area_id": "83",
+        "name": "Мультимедиа студии и киностудии",
+        "age7_access_pct": 42.58,
+        "age13_access_pct": 69.42,
+        "delta_pp": 26.84
+      },
+      {
+        "study_area_id": "75",
+        "name": "Туризм и экология",
+        "age7_access_pct": 11.05,
+        "age13_access_pct": 33.16,
+        "delta_pp": 22.11
+      },
+      {
+        "study_area_id": "23",
+        "name": "Профессиональная ориентация",
+        "age7_access_pct": 57.5,
+        "age13_access_pct": 77.88,
+        "delta_pp": 20.38
+      },
+      {
+        "study_area_id": "61",
+        "name": "Настольный теннис",
+        "age7_access_pct": 25.47,
+        "age13_access_pct": 44.41,
+        "delta_pp": 18.94
+      },
+      {
+        "study_area_id": "77",
+        "name": "Информационные технологии",
+        "age7_access_pct": 53.79,
+        "age13_access_pct": 71.54,
+        "delta_pp": 17.75
+      },
+      {
+        "study_area_id": "81",
+        "name": "Программирование",
+        "age7_access_pct": 46.41,
+        "age13_access_pct": 63.24,
+        "delta_pp": 16.83
+      },
+      {
+        "study_area_id": "74",
+        "name": "Туризм и краеведение",
+        "age7_access_pct": 63.59,
+        "age13_access_pct": 78.41,
+        "delta_pp": 14.82
+      },
+      {
+        "study_area_id": "33",
+        "name": "Физика",
+        "age7_access_pct": 23.56,
+        "age13_access_pct": 38.36,
+        "delta_pp": 14.8
+      },
+      {
+        "study_area_id": "58",
+        "name": "Легкая атлетика",
+        "age7_access_pct": 37.14,
+        "age13_access_pct": 50.72,
+        "delta_pp": 13.58
+      },
+      {
+        "study_area_id": "56",
+        "name": "Командные спортивные игры",
+        "age7_access_pct": 70.71,
+        "age13_access_pct": 83.27,
+        "delta_pp": 12.56
+      },
+      {
+        "study_area_id": "85",
+        "name": "Робототехника",
+        "age7_access_pct": 56.02,
+        "age13_access_pct": 66.22,
+        "delta_pp": 10.2
+      },
+      {
+        "study_area_id": "31",
+        "name": "Экология",
+        "age7_access_pct": 56.25,
+        "age13_access_pct": 62.85,
+        "delta_pp": 6.6
+      },
+      {
+        "study_area_id": "28",
+        "name": "Биология",
+        "age7_access_pct": 50.4,
+        "age13_access_pct": 56.2,
+        "delta_pp": 5.8
+      },
+      {
+        "study_area_id": "55",
+        "name": "Игровые виды спорта",
+        "age7_access_pct": 76.37,
+        "age13_access_pct": 80.42,
+        "delta_pp": 4.05
+      },
+      {
+        "study_area_id": "54",
+        "name": "Единоборства",
+        "age7_access_pct": 65.78,
+        "age13_access_pct": 69.63,
+        "delta_pp": 3.85
+      },
+      {
+        "study_area_id": "84",
+        "name": "Моделирование",
+        "age7_access_pct": 47.52,
+        "age13_access_pct": 50.19,
+        "delta_pp": 2.67
+      },
+      {
+        "study_area_id": "39",
+        "name": "Инструментальное музицирование",
+        "age7_access_pct": 63.43,
+        "age13_access_pct": 65.67,
+        "delta_pp": 2.24
+      },
+      {
+        "study_area_id": "45",
+        "name": "Цирковое искусство",
+        "age7_access_pct": 20.06,
+        "age13_access_pct": 20.48,
+        "delta_pp": 0.42
+      },
+      {
+        "study_area_id": "47",
+        "name": "Вокальное искусство",
+        "age7_access_pct": 77.14,
+        "age13_access_pct": 76.28,
+        "delta_pp": -0.86
+      },
+      {
+        "study_area_id": "90",
+        "name": "Театр",
+        "age7_access_pct": 78.25,
+        "age13_access_pct": 77.33,
+        "delta_pp": -0.92
+      },
+      {
+        "study_area_id": "79",
+        "name": "Начальное техническое моделирование",
+        "age7_access_pct": 48.59,
+        "age13_access_pct": 46.79,
+        "delta_pp": -1.8
+      },
+      {
+        "study_area_id": "60",
+        "name": "Настольные спортивные игры",
+        "age7_access_pct": 55.5,
+        "age13_access_pct": 53.23,
+        "delta_pp": -2.27
+      },
+      {
+        "study_area_id": "24",
+        "name": "Психология",
+        "age7_access_pct": 51.85,
+        "age13_access_pct": 49.26,
+        "delta_pp": -2.59
+      },
+      {
+        "study_area_id": "41",
+        "name": "Общие знания",
+        "age7_access_pct": 85.21,
+        "age13_access_pct": 82.47,
+        "delta_pp": -2.74
+      },
+      {
+        "study_area_id": "25",
+        "name": "Социальная адаптация",
+        "age7_access_pct": 80.35,
+        "age13_access_pct": 77.29,
+        "delta_pp": -3.06
+      },
+      {
+        "study_area_id": "43",
+        "name": "Хореография",
+        "age7_access_pct": 85.47,
+        "age13_access_pct": 81.35,
+        "delta_pp": -4.12
+      },
+      {
+        "study_area_id": "44",
+        "name": "Хоровое пение",
+        "age7_access_pct": 75.31,
+        "age13_access_pct": 71.18,
+        "delta_pp": -4.13
+      },
+      {
+        "study_area_id": "48",
+        "name": "Декоративно-прикладное искусство",
+        "age7_access_pct": 86.19,
+        "age13_access_pct": 81.95,
+        "delta_pp": -4.24
+      },
+      {
+        "study_area_id": "38",
+        "name": "Изобразительное искусство",
+        "age7_access_pct": 85.41,
+        "age13_access_pct": 80.99,
+        "delta_pp": -4.42
+      },
+      {
+        "study_area_id": "51",
+        "name": "Водные виды спорта",
+        "age7_access_pct": 49.86,
+        "age13_access_pct": 45.32,
+        "delta_pp": -4.54
+      },
+      {
+        "study_area_id": "65",
+        "name": "Подвижные спортивные игры",
+        "age7_access_pct": 69.86,
+        "age13_access_pct": 64.3,
+        "delta_pp": -5.56
+      },
+      {
+        "study_area_id": "29",
+        "name": "Математические предметы",
+        "age7_access_pct": 57.03,
+        "age13_access_pct": 50.35,
+        "delta_pp": -6.68
+      },
+      {
+        "study_area_id": "46",
+        "name": "Эстрадное пение",
+        "age7_access_pct": 59.21,
+        "age13_access_pct": 52.5,
+        "delta_pp": -6.71
+      },
+      {
+        "study_area_id": "67",
+        "name": "Спортивная хореография",
+        "age7_access_pct": 69.11,
+        "age13_access_pct": 61.85,
+        "delta_pp": -7.26
+      },
+      {
+        "study_area_id": "49",
+        "name": "Акробатика",
+        "age7_access_pct": 38.62,
+        "age13_access_pct": 25.93,
+        "delta_pp": -12.69
+      },
+      {
+        "study_area_id": "52",
+        "name": "Гимнастика",
+        "age7_access_pct": 67.39,
+        "age13_access_pct": 52.95,
+        "delta_pp": -14.44
+      },
+      {
+        "study_area_id": "89",
+        "name": "Шахматы",
+        "age7_access_pct": 71.67,
+        "age13_access_pct": 54.69,
+        "delta_pp": -16.98
+      }
+    ]
+  },
+  "threshold_distributions": {
+    "age7": {
+      "15": {
+        "min": 4.150000000000006,
+        "q1": 14.370000000000005,
+        "median": 26.680000000000007,
+        "q3": 39.535,
+        "max": 69.01
+      },
+      "20": {
+        "min": 6.439999999999998,
+        "q1": 21.43,
+        "median": 38.22,
+        "q3": 53.405,
+        "max": 77.51
+      },
+      "30": {
+        "min": 11.049999999999997,
+        "q1": 37.879999999999995,
+        "median": 56.02,
+        "q3": 70.285,
+        "max": 86.19
+      }
+    },
+    "age13": {
+      "15": {
+        "min": 8.64,
+        "q1": 22.714999999999996,
+        "median": 30.939999999999998,
+        "q3": 45.755,
+        "max": 61.6
+      },
+      "20": {
+        "min": 12.670000000000002,
+        "q1": 32.975,
+        "median": 42.03,
+        "q3": 59.045,
+        "max": 73.01
+      },
+      "30": {
+        "min": 20.480000000000004,
+        "q1": 50.535,
+        "median": 61.85,
+        "q3": 74.53999999999999,
+        "max": 83.27
+      }
+    }
+  },
+  "quantile_method": "Linear interpolation at h=(n-1)*p for p=0.25, 0.50 and 0.75; min and max are observed extrema.",
+  "interpretation_limits": [
+    "The 43 study areas are directions in the B1 summary, not a population-weighted sample of all possible activities.",
+    "Each direction uses 30,224 network-covered residential origins; block assignment is not required.",
+    "A reachable published coordinate is a proxy for observed offer, not a confirmed group, vacancy, enrolment or trip.",
+    "Medians and quartiles describe variation across directions, not pooled citywide shares."
+  ]
+}
