@@ -22,6 +22,8 @@ if len(set(geometry_ids))!=EXPECTED_BLOCKS:
 for name,frame in frames.items():
  if len(frame)!=EXPECTED_BLOCKS:
   raise ValueError(f'{name}: expected {EXPECTED_BLOCKS} block rows, got {len(frame)}')
+ if set(frame.index)!=set(geometry_ids):
+  raise ValueError(f'{name}: BlocksNet IDs do not match the geometry layer')
  if int(frame['n_valid'].fillna(0).sum())!=EXPECTED_VALID_ORIGINS:
   raise ValueError(f'{name}: expected {EXPECTED_VALID_ORIGINS} covered origins assigned to blocks')
  if (frame['n_valid'].fillna(0)<0).any():
@@ -76,3 +78,4 @@ def draw(name, delta=False):
  output=f'map23_b1_{name}'+('_delta' if delta else '')+'.png';fig.savefig(output,dpi=150,facecolor='white');plt.close(fig);print(output,classes)
 for direction in ['program','art']:draw(direction)
 draw('program',True)
+draw('art',True)
