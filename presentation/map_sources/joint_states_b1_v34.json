@@ -1,0 +1,98 @@
+{
+  "scenario": "B1",
+  "travel_mode": "walking",
+  "threshold_minutes": 30,
+  "ages": [
+    7,
+    13
+  ],
+  "block_count": 3330,
+  "covered_origins_assigned_to_blocks": 30222,
+  "state_labels": {
+    "both": "Доступна координата обоим возрастам",
+    "only_7": "Только для 7 лет",
+    "only_13": "Только для 13 лет",
+    "neither": "Ни для одного возраста в опубликованном каталоге"
+  },
+  "directions": {
+    "programming": {
+      "study_area_id": "81",
+      "name": "Программирование",
+      "source": "presentation/map_sources/b1_81.csv",
+      "blocks": 3330,
+      "n_valid": 30222,
+      "counts": {
+        "both": 13193,
+        "only_7": 834,
+        "only_13": 5922,
+        "neither": 10273
+      },
+      "class_counts": {
+        "low_n_1_2": 1020,
+        "no_result": 64,
+        "tie_modal": 8
+      },
+      "delta": {
+        "n_ge3": 2246,
+        "negative": 213,
+        "zero": 971,
+        "positive": 1062
+      },
+      "shares_pct": {
+        "both": 43.6536,
+        "only_7": 2.7596,
+        "only_13": 19.595,
+        "neither": 33.9918
+      }
+    },
+    "art": {
+      "study_area_id": "38",
+      "name": "Изобразительное искусство",
+      "source": "presentation/map_sources/b1_38.csv",
+      "blocks": 3330,
+      "n_valid": 30222,
+      "counts": {
+        "both": 24193,
+        "only_7": 1618,
+        "only_13": 282,
+        "neither": 4129
+      },
+      "class_counts": {
+        "low_n_1_2": 1020,
+        "no_result": 64,
+        "tie_modal": 6
+      },
+      "delta": {
+        "n_ge3": 2246,
+        "negative": 1413,
+        "zero": 597,
+        "positive": 236
+      },
+      "shares_pct": {
+        "both": 80.051,
+        "only_7": 5.3537,
+        "only_13": 0.9331,
+        "neither": 13.6622
+      }
+    }
+  },
+  "coverage": {
+    "residential_origins": 30611,
+    "network_covered": 30224,
+    "network_uncovered": 387,
+    "covered_assigned_to_blocks": 30222,
+    "covered_unassigned_to_blocks": 2
+  },
+  "provenance": {
+    "citywide_summary": "https://github.com/OlesyaValukhova/-/blob/master/results/blocksnet-b1-citywide-20261111/summary.json",
+    "block_profile_report": "https://github.com/OlesyaValukhova/-/blob/master/results/age-profiles-blocks-b1-20261112-r2/REPORT.md",
+    "map_script": "presentation/map_sources/maps_b1_v23.py",
+    "geometry": "presentation/map_sources/blocks_v22.json.gz.b64"
+  },
+  "limitations": [
+    "A coordinate is an observable offer proxy, not a verified group, capacity, free place or participation.",
+    "The neither state means no age-eligible published coordinate was found within 30 minutes; it does not prove that no activity exists.",
+    "Block summaries use 30,222 covered origins assigned to BlocksNet; two covered origins are not assigned to a block.",
+    "The 387 origins without network coverage are excluded, not coded as zero."
+  ]
+}
