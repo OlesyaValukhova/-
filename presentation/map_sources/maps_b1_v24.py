@@ -50,6 +50,7 @@ STATE_LABELS = {
 }
 DELTA_COLORS = ["#A94F3E", "#D18C7D", "#D8DEDD", "#8FB4C2", "#315B78"]
 DELTA_LABELS = ["Меньше −2", "От −2 до меньше 0", "0", "Больше 0 до 2", "Больше 2"]
+COVERAGE_COLORS = {"full": "#DCE7E4", "partial": "#C08A4B", "none": "#5D686E", "noresult": "#29343A"}
 
 def load_geometry():
     if not GEOMETRY_B64.exists() or GEOMETRY_B64.stat().st_size == 0:
@@ -179,7 +180,7 @@ def classify(row, kind):
     if pd.isna(d): return "noresult"
     return "d0" if d < -2 else "d1" if d < 0 else "d2" if d == 0 else "d3" if d <= 2 else "d4"
 
-def render_map(kind, direction, df, features, bounds, summary):
+def render_map(kind, direction, slug, df, features, bounds, summary):
     x0, x1, y0, y1 = bounds
     fig = plt.figure(figsize=(16, 9), facecolor="white")
     ax = fig.add_axes([0.02, 0.07, 0.63, 0.86])
@@ -198,7 +199,12 @@ def render_map(kind, direction, df, features, bounds, summary):
         polygons = [geom["coordinates"]] if geom["type"] == "Polygon" else geom["coordinates"]
         for polygon in polygons:
             buckets[key].append(polygon_path(polygon))
-    color_for = lambda k: (STATE_COLORS[k] if kind != "delta" or not k.startswith("d") else DELTA_COLORS[int(k[1])])
+    def color_for(key):
+        if kind == "coverage":
+            return COVERAGE_COLORS[key]
+        if kind == "state":
+            return STATE_COLORS[key]
+        return DELTA_COLORS[int(key[1])] if key.startswith("d") else STATE_COLORS[key]
     for key in order:
         if buckets[key]:
             ax.add_collection(PatchCollection(buckets[key], facecolor=color_for(key), edgecolor="white", linewidth=0.15))
@@ -263,7 +269,7 @@ def render_map(kind, direction, df, features, bounds, summary):
     fig.text(0.68, 0.055, note, fontsize=8.5, color="#64737C", wrap=True)
     fig.text(0.02, 0.02, "Санкт-Петербург · BlocksNet · EPSG:32636 · B1 · пешком, 30 минут · Navigator, 09.11.2026",
              fontsize=8, color="#7A858A")
-    out = ASSET_DIR / (f"{direction.lower().replace(' ', '_')}_{kind}_b1.svg" if kind != "coverage" else "network_coverage_b1.svg")
+    out = ASSET_DIR / (f"{slug}_states_b1.svg" if kind == "state" else f"{slug}_delta_b1.svg" if kind == "delta" else "network_coverage_b1.svg")
     fig.savefig(out, format="svg", facecolor="white")
     plt.close(fig)
     return out.name, dict(counts)
@@ -277,8 +283,8 @@ def main():
     for name, df in frames.items():
         direction = "Программирование" if name == "programming" else "Изобразительное искусство"
         for kind in ("state", "delta"):
-            outputs.append(render_map(kind, direction, df, features, bounds, summaries[name]))
-    outputs.append(render_map("coverage", "Покрытие", frames["programming"], features, bounds, summaries["programming"]))
+            outputs.append(render_map(kind, direction, name, df, features, bounds, summaries[name]))
+    outputs.append(render_map("coverage", "Покрытие", "network", frames["programming"], features, bounds, summaries["programming"]))
     audit = {
         "scenario": {"name": "B1", "mode": "walking", "threshold_minutes": 30, "ages": [7, 13],
                      "origin_snap_limit_m": 250, "crs": "EPSG:32636"},
