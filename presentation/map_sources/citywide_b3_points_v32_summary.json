@@ -1,0 +1,70 @@
+{
+  "source_url": "https://github.com/OlesyaValukhova/-/blob/master/results/blocksnet-b3-citywide-20261111/full_observable/b3-by-origin.geojson",
+  "source_commit": "72bcbd10b88e1b417ef372f1a08fd649805e0d63",
+  "scenario": "B3",
+  "threshold_minutes": 30,
+  "wait_per_boarding_min": 5,
+  "snap_limit_m": 250,
+  "crs": "EPSG:32636",
+  "origins": {
+    "total": 30611,
+    "network_covered": 30224,
+    "network_uncovered": 387,
+    "unique_origin_ids": 30611
+  },
+  "point_summary": {
+    "mean_N7": 38.28831392271043,
+    "mean_N13": 28.330929062996294,
+    "mean_delta_N13_minus_N7": -9.957384859714134,
+    "median_N7": 37,
+    "median_N13": 24,
+    "median_delta_N13_minus_N7": -8,
+    "zero_access_share_pct": {
+      "age7": 5.207781895182636,
+      "age13": 7.083774483853891
+    }
+  },
+  "category_counts": {
+    "age7": {
+      "0": 1574,
+      "1–10": 6350,
+      "11–30": 5254,
+      "31–60": 9398,
+      ">60": 7648,
+      "нет покрытия": 387
+    },
+    "age13": {
+      "0": 2141,
+      "1–10": 7173,
+      "11–30": 8043,
+      "31–60": 9255,
+      ">60": 3612,
+      "нет покрытия": 387
+    },
+    "delta": {
+      "0": 3332,
+      "≤−20": 4653,
+      "−19…−10": 8524,
+      "−9…−1": 12100,
+      ">0": 1615,
+      "нет покрытия": 387
+    }
+  },
+  "map": {
+    "type": "point-level; no spatial aggregation",
+    "panels": [
+      "N7",
+      "N13",
+      "N13-N7"
+    ],
+    "same_extent_and_scale": true,
+    "points_per_panel": 30611
+  },
+  "limitations": [
+    "N counts unique published coordinate proxies, not cards, seats or attendance.",
+    "387 origins without network coverage are shown in gray and are not treated as zero.",
+    "B3 is a modelled walk + public-transport scenario with a five-minute wait per boarding, not observed journeys.",
+    "Origin points are not children or population counts; point overlap can hide observations.",
+    "This is not a BlocksNet block choropleth and does not replace B1 block analysis or the uncompleted B2 barrier scenario."
+  ]
+}
