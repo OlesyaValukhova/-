@@ -8,6 +8,10 @@ from matplotlib.patches import Patch
 from matplotlib.collections import PatchCollection
 from make_research_maps import polygon_path
 
+fields=['both_pct','only_7_pct','only_13_pct','neither_pct']
+EXPECTED_BLOCKS=3330
+EXPECTED_VALID_ORIGINS=30222
+
 geometry_path=Path('blocks.json')
 if geometry_path.exists():
  features=json.loads(geometry_path.read_text(encoding='utf-8'))['features']
@@ -28,9 +32,6 @@ for name,frame in frames.items():
   raise ValueError(f'{name}: expected {EXPECTED_VALID_ORIGINS} covered origins assigned to blocks')
  if (frame['n_valid'].fillna(0)<0).any():
   raise ValueError(f'{name}: negative valid-origin count')
-fields=['both_pct','only_7_pct','only_13_pct','neither_pct']
-EXPECTED_BLOCKS=3330
-EXPECTED_VALID_ORIGINS=30222
 xy=[p for f in features for poly in f['geometry']['coordinates'] for p in poly[0]]; xs,ys=zip(*xy);bounds=(min(xs),max(xs),min(ys),max(ys))
 statecolors=['#315b78','#c0802c','#148543','#a6b7be','#735d4e','#707a80','#404a52']
 statelabels=['Для обоих возрастов','Только 7 лет','Только 13 лет','Ни один возраст','Ничья модального класса','1–2 валидные точки','Нет результата / совпадения']
