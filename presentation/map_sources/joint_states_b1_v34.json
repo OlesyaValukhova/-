@@ -94,5 +94,17 @@
     "The neither state means no age-eligible published coordinate was found within 30 minutes; it does not prove that no activity exists.",
     "Block summaries use 30,222 covered origins assigned to BlocksNet; two covered origins are not assigned to a block.",
     "The 387 origins without network coverage are excluded, not coded as zero."
-  ]
+  ],
+  "full_observable_layer": {
+    "offer_cards": 16067,
+    "unique_published_coordinates": 1743,
+    "coordinates_snapped_to_network": 1729,
+    "coordinates_not_snapped": 14,
+    "age_eligible_coordinates": {
+      "7": 1406,
+      "13": 959
+    },
+    "note": "Возрастные множества могут пересекаться; это координаты с возрастно-допустимой карточкой, не число групп или мест.",
+    "source": "https://github.com/OlesyaValukhova/-/blob/master/results/blocksnet-b1-citywide-20261111/summary.json"
+  }
 }
