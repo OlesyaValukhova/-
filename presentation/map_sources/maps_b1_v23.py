@@ -14,10 +14,24 @@ if geometry_path.exists():
 else:
  features=json.loads(gzip.decompress(base64.b64decode(Path('blocks_v22.json.gz.b64').read_bytes())))['features']
 frames={name:pd.read_csv(path,dtype={'blocksnet_block_id':str}).set_index('blocksnet_block_id',verify_integrity=True) for name,path in [('program','b1_81.csv'),('art','b1_38.csv')]}
+if len(features)!=EXPECTED_BLOCKS:
+ raise ValueError(f'Expected {EXPECTED_BLOCKS} BlocksNet polygons, got {len(features)}')
+geometry_ids=[str(f['properties']['blocksnet_block_id']) for f in features]
+if len(set(geometry_ids))!=EXPECTED_BLOCKS:
+ raise ValueError('BlocksNet geometry IDs are not unique')
+for name,frame in frames.items():
+ if len(frame)!=EXPECTED_BLOCKS:
+  raise ValueError(f'{name}: expected {EXPECTED_BLOCKS} block rows, got {len(frame)}')
+ if int(frame['n_valid'].fillna(0).sum())!=EXPECTED_VALID_ORIGINS:
+  raise ValueError(f'{name}: expected {EXPECTED_VALID_ORIGINS} covered origins assigned to blocks')
+ if (frame['n_valid'].fillna(0)<0).any():
+  raise ValueError(f'{name}: negative valid-origin count')
 fields=['both_pct','only_7_pct','only_13_pct','neither_pct']
+EXPECTED_BLOCKS=3330
+EXPECTED_VALID_ORIGINS=30222
 xy=[p for f in features for poly in f['geometry']['coordinates'] for p in poly[0]]; xs,ys=zip(*xy);bounds=(min(xs),max(xs),min(ys),max(ys))
 statecolors=['#315b78','#c0802c','#148543','#a6b7be','#735d4e','#707a80','#404a52']
-statelabels=['Оба возраста','Только 7 лет','Только 13 лет','Ни один возраст','Равные доли состояний','1–2 валидные точки','Нет результата / совпадения']
+statelabels=['Оба возраста','Только 7 лет','Только 13 лет','Ни один возраст','Ничья модального класса','1–2 валидные точки','Нет результата / совпадения']
 deltacolors=['#a54530','#ce8979','#c0cbcb','#81aabc','#315b78','#707a80','#404a52']
 deltalabels=['Меньше −2','От −2 до меньше 0','0','Больше 0 до 2','Больше 2','1–2 валидные точки','Нет результата / совпадения']
 
