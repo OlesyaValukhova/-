@@ -122,5 +122,19 @@
     "block_manifest": "https://github.com/OlesyaValukhova/-/blob/master/results/age-profiles-blocks-b1-20261112-r2/manifest.json",
     "b1_report": "https://github.com/OlesyaValukhova/-/blob/master/results/age-profiles-blocks-b1-20261112-r2/REPORT.md",
     "direction_report": "https://github.com/OlesyaValukhova/-/blob/master/results/direction-age-maps-b1-20261111/REPORT.md"
+  },
+  "direction_difference_chart": {
+    "source": "presentation/map_sources/b1-direction-summary.csv",
+    "rows": 43,
+    "unique_study_areas": 43,
+    "origins_network_covered_per_direction": 30224,
+    "formula": "(100 - age13_zero_pct_30min) - (100 - age7_zero_pct_30min)",
+    "unit": "percentage points",
+    "positive_age13": 24,
+    "negative_age7": 19,
+    "zero": 0,
+    "min": -16.98,
+    "max": 47.14,
+    "output": "presentation/assets_v35/directions_chart_b1.svg"
   }
 }
