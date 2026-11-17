@@ -7,6 +7,13 @@ const root = process.cwd();
 const htmlPath = path.join(root, "presentation", "age_accessibility_b1_v40.html");
 const outputDir = path.join(root, "presentation", "browser_qa_v40");
 await fs.mkdir(outputDir, { recursive: true });
+const speechPath = path.join(root, "presentation", "speaker_script_v12.md");
+const speechText = await fs.readFile(speechPath, "utf8");
+const speechLines = speechText.split(/\\r?\\n/).filter(line => /^\\d+\\.\\s/.test(line));
+const speechWordCounts = speechLines.map(line => line.trim().split(/\\s+/).length);
+const speechOverLimit = speechWordCounts
+  .map((words, index) => ({ slide: index + 1, words }))
+  .filter(item => item.words > 45);
 
 const mime = {
   ".html": "text/html; charset=utf-8",
@@ -186,6 +193,9 @@ const report = {
   viewport: "1440x900",
   slide_count: slides.length,
   rendered_slide_count: slides.filter(s => s.status === "passed").length,
+  speech_line_count: speechLines.length,
+  speech_max_words: Math.max(0, ...speechWordCounts),
+  speech_over_45_words: speechOverLimit,
   document_images: documentImages,
   page_errors: pageErrors,
   console_errors: consoleErrors,
@@ -202,4 +212,7 @@ console.log(JSON.stringify({
   console_errors: report.console_errors,
 }, null, 2));
 
+if (speechLines.length !== 20) failures.push(`Expected 20 numbered speech lines, got ${speechLines.length}`);
+if (speechOverLimit.length) failures.push(`Speech lines exceed 45-word soft limit: ${JSON.stringify(speechOverLimit)}`);
+report.failures = failures;
 if (failures.length || pageErrors.length || consoleErrors.length) process.exitCode = 1;
