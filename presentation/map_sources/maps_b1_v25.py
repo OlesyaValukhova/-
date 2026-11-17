@@ -245,7 +245,7 @@ def render_map(kind, direction, slug, df, features, bounds, summary):
 
     if kind == "state":
         title = "Возрастные состояния по кварталам"
-        subtitle = f"{direction} · преобладающий класс среди жилых точек · B1"
+        subtitle = f"{direction} · B1"
         labels = STATE_LABELS
         note = "N — уникальные опубликованные координаты. «Оба возраста» не означает одну и ту же площадку."
         p7, p13 = summary["weighted_access_pct"]["age7"], summary["weighted_access_pct"]["age13"]
@@ -269,7 +269,7 @@ def render_map(kind, direction, slug, df, features, bounds, summary):
         fig.text(0.68, 0.42, f"+ {pos:,}".replace(",", " "), fontsize=13, color="#315B78")
     else:
         title = "Сетевое покрытие жилых точек"
-        subtitle = "Доля непокрытых точек по кварталам · порог привязки 250 м"
+        subtitle = "Доля непокрытых точек · привязка к сети до 250 м"
         labels = {"full": "0% без покрытия", "partial": "5,3% без покрытия",
                   "none": "100% без покрытия", "noresult": "Нет результата"}
         note = "387 точек без сетевого покрытия исключены; 2 покрытые точки не попали в кварталы."
