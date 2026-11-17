@@ -22,8 +22,8 @@
 
 ## Проверка
 
-- Браузерная проверка всех 20 слайдов: [GitHub Actions run #11](https://github.com/OlesyaValukhova/-/actions/runs/43996944887) — success.
-- [Артефакт со скриншотами 20 слайдов и report.json](https://github.com/OlesyaValukhova/-/actions/runs/43996944887/artifacts/14290920599).
+- Браузерная проверка всех 20 слайдов: [GitHub Actions run #16](https://github.com/OlesyaValukhova/-/actions/runs/43997391616) — success.
+- [Артефакт со скриншотами 20 слайдов и report.json](https://github.com/OlesyaValukhova/-/actions/runs/43997391616/artifacts/14289864748).
 
 Workflow `Browser QA presentation v40` проверяет:
 - запуск презентации и переход по всем 20 слайдам;
@@ -42,7 +42,7 @@ npx playwright install chromium
 node presentation/map_sources/browser_qa_v40.mjs
 ```
 
-PNG каждого слайда и `report.json` сохраняются в `presentation/browser_qa_v40/`.
+PNG каждого слайда и `report.json` сохраняются в `presentation/browser_qa_v40/`. Проверка также требует ровно 20 нумерованных реплик и ограничивает каждую 45 словами; в v40 максимум — 39 слов.
 
 ## Методические ограничения
 
