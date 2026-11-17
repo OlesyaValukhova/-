@@ -24,4 +24,4 @@ B1: пешком, 30 минут, возрастные срезы 7 и 13 лет.
 
 GitHub Actions workflow: `.github/workflows/presentation-browser-qa-v43.yml`. Он запускает только браузерную проверку и не пересчитывает B1, не обновляет OSM и не меняет карты.
 
-См. также `QA_v43.md` после завершения workflow.
+Итог: [QA_v43.md](QA_v43.md). [GitHub Actions run #3 — success](https://github.com/OlesyaValukhova/-/actions/runs/44006030808), [20 скриншотов и report.json](https://github.com/OlesyaValukhova/-/actions/runs/44006030808/artifacts/14294886368).
