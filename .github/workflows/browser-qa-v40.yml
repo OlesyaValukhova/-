@@ -10,6 +10,8 @@ on:
       - 'presentation/assets_v35/**'
       - 'presentation/assets_v38/**'
       - 'presentation/assets_v39/**'
+      - 'presentation/assets_v40/**'
+      - 'presentation/QA_v40.md'
       - 'presentation/map_sources/browser_qa_v40.mjs'
       - '.github/workflows/browser-qa-v40.yml'
   workflow_dispatch:
