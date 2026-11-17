@@ -18,9 +18,9 @@ const minX=Math.min(...coords.map(p=>p[0])),maxX=Math.max(...coords.map(p=>p[0])
 const W=760,H=660,M=28,scale=Math.min((W-2*M)/(maxX-minX),(H-2*M)/(maxY-minY)),ox=(W-(maxX-minX)*scale)/2,oy=(H-(maxY-minY)*scale)/2;
 const xy=p=>[ox+(p[0]-minX)*scale,H-oy-(p[1]-minY)*scale];
 const pathMarkup=features.map((f,i)=>{const d=f.geometry.coordinates.map(poly=>poly.map(ring=>ring.map((p,j)=>{const[x,y]=xy(p);return`${j?"L":"M"}${x.toFixed(1)},${y.toFixed(1)}`;}).join(" ")+" Z").join(" ")).join(" ");return`<path d="${d}" fill="${i%2?"#F2F5F5":"#E9EFF0"}" fill-rule="evenodd" stroke="#71838B" stroke-width="1.35" stroke-linejoin="round"/>`;}).join("");
-const labels=features.map((f,i)=>({i:i+1,name:f.properties.name,point:xy(labelPoint(f))})),placed=[],candidateOffsets=[[0,0]];
-for(let r=22;r<=210;r+=18)for(let a=0;a<360;a+=15){const rad=a*Math.PI/180;candidateOffsets.push([Math.cos(rad)*r,Math.sin(rad)*r]);}
-for(const l of labels){let chosen=null,best=null,bestDistance=-1,bestCost=Infinity;for(const off of candidateOffsets){const x=l.point[0]+off[0],y=l.point[1]+off[1];if(x<18||x>W-18||y<18||y>H-18)continue;const d=placed.length?Math.min(...placed.map(p=>Math.hypot(p.x-x,p.y-y))):999,cost=Math.hypot(...off);if(d>bestDistance||(d===bestDistance&&cost<bestCost)){best={x,y,off,d};bestDistance=d;bestCost=cost;}if(d>=34){chosen={x,y,off,d};break;}}l.label=chosen||best||{x:l.point[0],y:l.point[1],off:[0,0],d:0};placed.push({x:l.label.x,y:l.label.y});}
+const labels=features.map((f,i)=>{const p=labelPoint(f);return{i:i+1,name:f.properties.name,point:xy([p.x,p.y])};});
+const placed=[],offsets=[[0,0]];for(let r=22;r<=210;r+=18)for(let a=0;a<360;a+=15){const rad=a*Math.PI/180;offsets.push([Math.cos(rad)*r,Math.sin(rad)*r]);}
+for(const l of labels){let chosen=null,best=null,bestDistance=-1,bestCost=Infinity;for(const off of offsets){const x=l.point[0]+off[0],y=l.point[1]+off[1];if(x<18||x>W-18||y<18||y>H-18)continue;const d=placed.length?Math.min(...placed.map(p=>Math.hypot(p.x-x,p.y-y))):999,cost=Math.hypot(...off);if(d>bestDistance||(d===bestDistance&&cost<bestCost)){best={x,y,off,d};bestDistance=d;bestCost=cost;}if(d>=34){chosen={x,y,off,d};break;}}l.label=chosen||best||{x:l.point[0],y:l.point[1],off:[0,0],d:0};placed.push({x:l.label.x,y:l.label.y});}
 const leaders=labels.filter(l=>Math.hypot(...l.label.off)>5).map(l=>`<line x1="${l.point[0].toFixed(1)}" y1="${l.point[1].toFixed(1)}" x2="${l.label.x.toFixed(1)}" y2="${l.label.y.toFixed(1)}" stroke="#A94F3E" stroke-width="1.2"/>`).join("");
 const markers=labels.map(l=>`<g><circle cx="${l.label.x.toFixed(1)}" cy="${l.label.y.toFixed(1)}" r="14" fill="#315B78" stroke="#FFFFFF" stroke-width="2"/><text x="${l.label.x.toFixed(1)}" y="${(l.label.y+4.5).toFixed(1)}" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="700" fill="#FFFFFF">${l.i}</text></g>`).join("");
 const barLen=10000*scale,barX=34,barY=H-34;
@@ -38,4 +38,4 @@ const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="760" height="660" view
 <text x="34" y="646" font-family="Arial,sans-serif" font-size="10" fill="#66757C">EPSG:32636 · контекстный слой · OSM, 17.11.2026</text>
 </svg>`;
 fs.mkdirSync(path.dirname(output),{recursive:true});fs.writeFileSync(output,svg,"utf8");
-console.log(JSON.stringify({output,feature_count:features.length,label_count:labels.length,min_label_spacing:Math.min(...labels.flatMap((a,i)=>labels.slice(i+1).map(b=>Math.hypot(a.label.x-b.label.x,a.label.y-b.label.y))))}));
+console.log(JSON.stringify({output,feature_count:features.length,label_count:labels.length}));
