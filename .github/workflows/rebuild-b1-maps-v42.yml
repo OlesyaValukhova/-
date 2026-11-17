@@ -19,7 +19,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: b1-map-context-v42-\${{ github.ref }}
+  group: b1-map-context-v42-${{ github.ref }}
   cancel-in-progress: true
 
 permissions:
@@ -31,7 +31,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: \${{ github.ref_name }}
+          ref: ${{ github.ref_name }}
           fetch-depth: 0
 
       - uses: actions/setup-python@v5
@@ -84,7 +84,7 @@ jobs:
           git add presentation/assets_v42/*.svgz presentation/assets_v42/*.png
           if ! git diff --cached --quiet; then
             git commit -m "Rebuild B1 maps with OSM district context v42"
-            git fetch origin "\${GITHUB_REF_NAME}"
-            git rebase "origin/\${GITHUB_REF_NAME}"
-            git push origin HEAD:"\${GITHUB_REF_NAME}"
+            git fetch origin "${GITHUB_REF_NAME}"
+            git rebase "origin/${GITHUB_REF_NAME}"
+            git push origin HEAD:"${GITHUB_REF_NAME}"
           fi
