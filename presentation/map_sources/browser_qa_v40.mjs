@@ -54,6 +54,9 @@ try {
   await page.goto("http://127.0.0.1:4173/presentation/age_accessibility_b1_v40.html", {
     waitUntil: "networkidle",
   });
+  await page.locator("img").evaluateAll(async images => {
+    await Promise.all(images.map(img => img.decode().catch(() => null)));
+  });
   const initialCount = (await page.locator("#count").textContent())?.trim();
   if (initialCount !== "1 / 20") failures.push("Deck did not initialize at slide 1 of 20");
   await page.locator("#toggle").click();
@@ -149,6 +152,17 @@ try {
     for (const failure of slideFailures) failures.push(`Slide ${n}: ${failure}`);
   }
 
+  const allImages = await page.locator("img").evaluateAll(images => images.map(img => ({
+    src: img.getAttribute("src"),
+    loaded: img.complete && img.naturalWidth > 0,
+    alt: (img.getAttribute("alt") || "").trim(),
+    width: img.naturalWidth,
+    height: img.naturalHeight,
+  })));
+  for (const image of allImages) {
+    if (!image.loaded) failures.push(`document image failed to load: ${image.src}`);
+    if (!image.alt) failures.push(`document image has no alt text: ${image.src}`);
+  }
   const lastCount = (await page.locator("#count").textContent())?.trim();
   if (lastCount !== "20 / 20") failures.push("Deck did not reach slide 20");
   if (await page.locator("#next").isEnabled()) failures.push("Next button remains enabled on final slide");
@@ -162,6 +176,7 @@ const report = {
   viewport: "1440x900",
   slide_count: slides.length,
   rendered_slide_count: slides.filter(s => s.status === "passed").length,
+  document_images: allImages,
   page_errors: pageErrors,
   console_errors: consoleErrors,
   failures,
