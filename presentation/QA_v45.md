@@ -4,9 +4,11 @@
 
 **GitHub Actions: success**
 
-- [Pull-request run #4 — success](https://github.com/OlesyaValukhova/-/actions/runs/44010059711).
+- [Final pull-request run #8 — success](https://github.com/OlesyaValukhova/-/actions/runs/44010347991).
+- [Earlier pull-request run #4 — success](https://github.com/OlesyaValukhova/-/actions/runs/44010059711).
 - [Push run #3 — success](https://github.com/OlesyaValukhova/-/actions/runs/44010050813).
-- [Артефакт: 20 скриншотов и report.json](https://github.com/OlesyaValukhova/-/actions/runs/44010059711/artifacts/14295852955).
+- [Финальный артефакт: 20 скриншотов и report.json](https://github.com/OlesyaValukhova/-/actions/runs/44010347991/artifacts/14295793944).
+- [Артефакт визуально просмотренной версии](https://github.com/OlesyaValukhova/-/actions/runs/44010059711/artifacts/14295852955).
 
 ## Браузерная проверка
 
