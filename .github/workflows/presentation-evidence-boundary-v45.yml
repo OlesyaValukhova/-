@@ -1,0 +1,48 @@
+name: Browser QA and evidence-boundary validation v45
+
+on:
+  push:
+    branches:
+      - codex/presentation-evidence-boundary-v45
+    paths:
+      - 'presentation/age_accessibility_b1_v45.html'
+      - 'presentation/speaker_script_v16.md'
+      - 'presentation/assets_v44/district_locator_v44.svg'
+      - 'presentation/map_sources/district_locator_audit_v44.json'
+      - 'presentation/map_sources/spb_district_boundaries_v42.geojson'
+      - 'presentation/map_sources/build_district_locator_v44.mjs'
+      - 'presentation/map_sources/browser_qa_v45.mjs'
+      - '.github/workflows/presentation-district-locator-v44.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  rebuild-and-browser-qa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Rebuild district locator from committed OSM geometry
+        run: node presentation/map_sources/build_district_locator_v44.mjs
+      - name: Verify deterministic SVG output
+        run: git diff --exit-code -- presentation/assets_v44/district_locator_v44.svg
+      - name: Install Playwright Chromium
+        run: |
+          npm init -y
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+      - name: Render and validate all 20 slides against speaker script v16
+        run: node presentation/map_sources/browser_qa_v45.mjs
+      - name: Upload slide screenshots and QA report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: presentation-v45-browser-qa
+          path: presentation/browser_qa_v45/
+          retention-days: 7
