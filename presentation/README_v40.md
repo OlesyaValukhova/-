@@ -12,6 +12,8 @@
 
 ## Карты v40
 
+Повторная генерация с укороченными заголовками выполнена [GitHub Actions run #5](https://github.com/OlesyaValukhova/-/actions/runs/43996829089); все проверки карт прошли.
+
 - `assets_v40/programming_states_b1.svg` и `art_states_b1.svg` — модальные возрастные состояния.
 - `programming_delta_b1.svg` и `art_delta_b1.svg` — квартальная медиана парной разницы.
 - `network_coverage_b1.svg` — диагностика сетевого покрытия.
