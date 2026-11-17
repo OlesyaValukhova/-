@@ -38,11 +38,12 @@ jobs:
         run: |
           python presentation/map_sources/verify_b1_map_assets_v40.py
           python presentation/map_sources/verify_paired_delta_map_v40.py
-      - name: Commit generated SVGs, preview and audits
+      - name: Commit compressed vector sources, PNG maps and audits
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add presentation/assets_v40/*.svg presentation/assets_v40/*.png presentation/map_sources/coverage_audit_v40.json presentation/map_sources/paired_delta_map_audit_v40.json
+          git rm -f presentation/assets_v40/*.svg || true
+          git add presentation/assets_v40/*.svgz presentation/assets_v40/*.png presentation/map_sources/coverage_audit_v40.json presentation/map_sources/paired_delta_map_audit_v40.json
           if ! git diff --cached --quiet; then
             git commit -m "Build comparable B1 map assets v40"
             git push origin HEAD:${GITHUB_REF_NAME}
