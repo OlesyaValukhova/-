@@ -9,6 +9,15 @@ const outputDir = path.join(root, "presentation", "browser_qa_v44");
 await fs.mkdir(outputDir, { recursive: true });
 const speechPath = path.join(root, "presentation", "speaker_script_v15.md");
 const speechText = await fs.readFile(speechPath, "utf8");
+const locatorSvgPath = path.join(root, "presentation", "assets_v44", "district_locator_v44.svg");
+const locatorSvgText = await fs.readFile(locatorSvgPath, "utf8");
+const locatorMarkers = [...locatorSvgText.matchAll(/<circle cx="([0-9.]+)" cy="([0-9.]+)" r="14"/g)]
+  .map(match => ({ x: Number(match[1]), y: Number(match[2]) }));
+const locatorDistances = locatorMarkers.flatMap((a, i) =>
+  locatorMarkers.slice(i + 1).map(b => Math.hypot(a.x - b.x, a.y - b.y))
+);
+const locatorMinSpacing = locatorDistances.length ? Math.min(...locatorDistances) : 0;
+const locatorHasAttribution = locatorSvgText.includes("© OpenStreetMap contributors") && locatorSvgText.includes("ODbL 1.0");
 const speechLines = speechText.split(/\r?\n/).filter(line => /^\d+\.\s/.test(line));
 const speechWordCounts = speechLines.map(line => line.trim().split(/\s+/).length);
 const speechOverLimit = speechWordCounts
@@ -47,6 +56,10 @@ const server = http.createServer(async (req, res) => {
 await new Promise(resolve => server.listen(4173, "127.0.0.1", resolve));
 const browser = await chromium.launch({ headless: true });
 const failures = [];
+if (locatorMarkers.length !== 18) failures.push(`Locator SVG must contain 18 numbered district markers, got ${locatorMarkers.length}`);
+if (locatorSvgText.includes("NaN")) failures.push("Locator SVG contains invalid NaN coordinates");
+if (!locatorHasAttribution) failures.push("Locator SVG is missing OpenStreetMap / ODbL attribution");
+if (locatorMinSpacing < 30) failures.push(`Locator district markers overlap: minimum spacing ${locatorMinSpacing}`);
 if (speechVersion !== "15") failures.push(`Expected speaker_script_v15.md header, got: ${speechHeader || "missing"}`);
 if (JSON.stringify(speechSlideNumbers) !== JSON.stringify(Array.from({length: 20}, (_, i) => i + 1))) {
   failures.push(`Speaker script numbering must be exactly 1–20, got: ${JSON.stringify(speechSlideNumbers)}`);
@@ -242,6 +255,9 @@ const report = {
   speaker_script_heading: speechHeader,
   speaker_script_version: speechVersion,
   speaker_script_sha256: (await import("node:crypto")).createHash("sha256").update(speechText).digest("hex"),
+  locator_map_marker_count: locatorMarkers.length,
+  locator_map_minimum_marker_spacing_px: Number(locatorMinSpacing.toFixed(2)),
+  locator_map_has_osm_attribution: locatorHasAttribution,
   speech_slide_numbers: speechSlideNumbers,
   speech_line_count: speechLines.length,
   speech_max_words: Math.max(0, ...speechWordCounts),
