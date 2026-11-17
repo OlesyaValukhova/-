@@ -201,7 +201,7 @@ def main() -> None:
         "version": "v42",
         "retrieved_at_utc": datetime.now(timezone.utc).isoformat(),
         "source": "OpenStreetMap administrative boundary relations; relation IDs documented in OSM Wiki",
-        "source_documentation": "https://wiki.openstreetmap.org/wiki/RU:%D0%A1%D0%B0%D0%BD%D0%BA%D1%82-%D0%9Fетербург/%D0%A0%D0%B0%D0%B9%D0%BE%D0%BD%D1%8B",
+        "source_documentation": "https://wiki.openstreetmap.org/wiki/RU:%D0%A1%D0%B0%D0%BD%D0%BA%D1%82-%D0%9F%D0%B5%D1%82%D0%B5%D1%80%D0%B1%D1%83%D1%80%D0%B3/%D0%A0%D0%B0%D0%B9%D0%BE%D0%BD%D1%8B",
         "license": "ODbL 1.0; attribution: © OpenStreetMap contributors",
         "crs": TARGET_CRS,
         "feature_count": len(features),
