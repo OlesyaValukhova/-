@@ -15,6 +15,7 @@ from pathlib import Path
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+plt.rcParams["svg.fonttype"] = "none"
 import pandas as pd
 from matplotlib.collections import PatchCollection
 from matplotlib.patches import Patch
