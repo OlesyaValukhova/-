@@ -17,6 +17,10 @@ on:
       - '.github/workflows/browser-qa-v40.yml'
   workflow_dispatch:
 
+concurrency:
+  group: presentation-browser-qa-v40-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
