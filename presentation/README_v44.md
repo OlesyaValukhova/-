@@ -19,7 +19,7 @@ v44 основана на проверенной v43 и добавляет от�
 - `map_sources/district_locator_audit_v44.json` — список 18 районов, OSM relation ID, CRS, лицензия, масштаб и проверка расстояния между маркерами.
 - `map_sources/browser_qa_v44.mjs` — Playwright-проверка 20 слайдов и актуальной речи v15.
 - `.github/workflows/presentation-district-locator-v44.yml` — повторная генерация SVG, проверка детерминированности и браузерная QA.
-- `QA_v44.md` — итоговый отчёт: [GitHub Actions run #6 — success](https://github.com/OlesyaValukhova/-/actions/runs/44007199819), [20 скриншотов и report.json](https://github.com/OlesyaValukhova/-/actions/runs/44007199819/artifacts/14295261143).
+- `QA_v44.md` — итоговый отчёт: [GitHub Actions run #8 — success](https://github.com/OlesyaValukhova/-/actions/runs/44007520306), [20 скриншотов и report.json](https://github.com/OlesyaValukhova/-/actions/runs/44007520306/artifacts/14294467957).
 
 ## Методические ограничения
 
