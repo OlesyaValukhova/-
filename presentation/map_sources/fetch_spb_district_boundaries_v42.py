@@ -46,8 +46,8 @@ EXPECTED = {
     1114902: "Центральный",
 }
 ENDPOINTS = (
-    "https://overpass-api.de/api/interpreter",
     "https://overpass.kumi.systems/api/interpreter",
+    "https://overpass-api.de/api/interpreter",
     "https://overpass.nchc.org.tw/api/interpreter",
 )
 TARGET_CRS = "EPSG:32636"
@@ -66,13 +66,13 @@ def fetch_raw() -> dict:
     }
     errors = []
     for endpoint in ENDPOINTS:
-        for attempt in range(3):
+        for attempt in range(1):
             try:
                 response = requests.post(
                     endpoint,
                     data={"data": query},
                     headers=headers,
-                    timeout=(20, 240),
+                    timeout=(15, 90),
                 )
                 response.raise_for_status()
                 payload = response.json()
@@ -85,8 +85,8 @@ def fetch_raw() -> dict:
                 return payload
             except Exception as exc:  # noqa: BLE001 - preserve endpoint diagnostics
                 errors.append(f"{endpoint} attempt {attempt + 1}: {type(exc).__name__}: {exc}")
-                if attempt < 2:
-                    time.sleep(4 * (attempt + 1))
+                if attempt < 0:
+                    time.sleep(2)
     raise RuntimeError("All Overpass endpoints failed:\n" + "\n".join(errors))
 
 
