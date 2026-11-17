@@ -10,14 +10,24 @@ await fs.mkdir(outputDir, { recursive: true });
 const speechPath = path.join(root, "presentation", "speaker_script_v15.md");
 const speechText = await fs.readFile(speechPath, "utf8");
 const locatorSvgPath = path.join(root, "presentation", "assets_v44", "district_locator_v44.svg");
+const locatorAuditPath = path.join(root, "presentation", "map_sources", "district_locator_audit_v44.json");
 const locatorSvgText = await fs.readFile(locatorSvgPath, "utf8");
-const locatorMarkers = [...locatorSvgText.matchAll(/<circle cx="([0-9.]+)" cy="([0-9.]+)" r="14"/g)]
-  .map(match => ({ x: Number(match[1]), y: Number(match[2]) }));
+const locatorAudit = JSON.parse(await fs.readFile(locatorAuditPath, "utf8"));
+const markerPattern = new RegExp('<circle cx="([0-9.]+)" cy="([0-9.]+)" r="14"[^>]*/><text[^>]*>([0-9]+)</text>', "g");
+const locatorMarkers = [...locatorSvgText.matchAll(markerPattern)]
+  .map(match => ({ x: Number(match[1]), y: Number(match[2]), number: Number(match[3]) }));
 const locatorDistances = locatorMarkers.flatMap((a, i) =>
   locatorMarkers.slice(i + 1).map(b => Math.hypot(a.x - b.x, a.y - b.y))
 );
 const locatorMinSpacing = locatorDistances.length ? Math.min(...locatorDistances) : 0;
 const locatorHasAttribution = locatorSvgText.includes("© OpenStreetMap contributors") && locatorSvgText.includes("ODbL 1.0");
+const locatorAuditNumbers = locatorAudit.districts.map(district => district.number);
+const locatorAuditOsmIdsUnique = new Set(locatorAudit.districts.map(district => district.osm_id)).size === 18;
+const locatorAuditPositionsMatch = locatorAudit.districts.every(district => {
+  const marker = locatorMarkers.find(item => item.number === district.number);
+  return marker && Math.abs(marker.x - district.label_position_svg_px[0]) < 0.05 &&
+    Math.abs(marker.y - district.label_position_svg_px[1]) < 0.05;
+});
 const speechLines = speechText.split(/\r?\n/).filter(line => /^\d+\.\s/.test(line));
 const speechWordCounts = speechLines.map(line => line.trim().split(/\s+/).length);
 const speechOverLimit = speechWordCounts
@@ -57,6 +67,11 @@ await new Promise(resolve => server.listen(4173, "127.0.0.1", resolve));
 const browser = await chromium.launch({ headless: true });
 const failures = [];
 if (locatorMarkers.length !== 18) failures.push(`Locator SVG must contain 18 numbered district markers, got ${locatorMarkers.length}`);
+if (locatorAudit.version !== "v44" || locatorAudit.label_count !== 18 || locatorAudit.districts.length !== 18) failures.push("Locator JSON audit must describe 18 districts in v44");
+if (JSON.stringify(locatorAuditNumbers) !== JSON.stringify(Array.from({length: 18}, (_, i) => i + 1))) failures.push("Locator audit numbers must be sequential 1–18");
+if (!locatorAuditOsmIdsUnique) failures.push("Locator audit OSM relation IDs must be unique");
+if (!locatorAuditPositionsMatch) failures.push("Locator audit marker positions do not match SVG");
+if (Math.abs(locatorAudit.minimum_marker_spacing_px - locatorMinSpacing) > 0.05) failures.push("Locator audit marker spacing does not match SVG");
 if (locatorSvgText.includes("NaN")) failures.push("Locator SVG contains invalid NaN coordinates");
 if (!locatorHasAttribution) failures.push("Locator SVG is missing OpenStreetMap / ODbL attribution");
 if (locatorMinSpacing < 30) failures.push(`Locator district markers overlap: minimum spacing ${locatorMinSpacing}`);
@@ -149,6 +164,7 @@ try {
         images,
         districtListCount: document.querySelectorAll(".district-item").length,
         districtNumbers: [...document.querySelectorAll(".district-num")].map(el => Number(el.textContent.trim())),
+        districtNames: [...document.querySelectorAll(".district-item")].map(el => el.querySelectorAll("span")[1]?.textContent.trim() || ""),
       };
     });
 
@@ -166,6 +182,7 @@ try {
     if (n === 10) {
       if (state.districtListCount !== 18) slideFailures.push(`district locator must list 18 districts, got ${state.districtListCount}`);
       if (JSON.stringify(state.districtNumbers) !== JSON.stringify(Array.from({length: 18}, (_, i) => i + 1))) slideFailures.push("district locator numbers must be sequential 1–18");
+      if (JSON.stringify(state.districtNames) !== JSON.stringify(locatorAudit.districts.map(district => district.name))) slideFailures.push("district locator list does not match the OSM audit index");
       if (!state.note.includes("районов") || !state.note.includes("BlocksNet")) slideFailures.push("slide 10 note must distinguish district context from BlocksNet analysis");
       if (!state.bodyText.includes("OpenStreetMap") || !state.bodyText.includes("ODbL 1.0")) slideFailures.push("district locator attribution is missing");
       if (!state.images.some(image => image.alt.includes("18 административных районов"))) slideFailures.push("district locator alt text is missing");
@@ -215,6 +232,7 @@ try {
       image_count: state.images.length,
       district_list_count: state.districtListCount,
       district_numbers: state.districtNumbers,
+      district_names: state.districtNames,
       images: state.images,
       overflow_elements: state.overflow,
       status: slideFailures.length ? "failed" : "passed",
@@ -258,6 +276,10 @@ const report = {
   locator_map_marker_count: locatorMarkers.length,
   locator_map_minimum_marker_spacing_px: Number(locatorMinSpacing.toFixed(2)),
   locator_map_has_osm_attribution: locatorHasAttribution,
+  locator_map_audit_file: "presentation/map_sources/district_locator_audit_v44.json",
+  locator_map_audit_district_count: locatorAudit.districts.length,
+  locator_map_audit_osm_ids_unique: locatorAuditOsmIdsUnique,
+  locator_map_audit_positions_match: locatorAuditPositionsMatch,
   speech_slide_numbers: speechSlideNumbers,
   speech_line_count: speechLines.length,
   speech_max_words: Math.max(0, ...speechWordCounts),
