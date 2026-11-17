@@ -14,9 +14,9 @@ const speechWordCounts = speechLines.map(line => line.trim().split(/\s+/).length
 const speechOverLimit = speechWordCounts
   .map((words, index) => ({ slide: index + 1, words }))
   .filter(item => item.words > 45);
-const speechHeader = speechText.split(/\r?\n/).find(line => line.startsWith("# "));
-const speechVersion = speechHeader?.match(/\bv(\d+)\b/)?.[1] || null;
-const speechSlideNumbers = speechLines.map(line => Number(line.match(/^(\d+)\./)?.[1] || 0));
+const speechHeader = speechText.split("\n").find(line => line.startsWith("# "));
+const speechVersion = speechHeader?.match(/v([0-9]+)/)?.[1] || null;
+const speechSlideNumbers = speechLines.map(line => Number(line.match(/^([0-9]+)\./)?.[1] || 0));
 
 const mime = {
   ".html": "text/html; charset=utf-8",
