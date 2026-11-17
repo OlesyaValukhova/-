@@ -41,21 +41,6 @@ const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="760" height="660" view
 const distances=labels.flatMap((a,i)=>labels.slice(i+1).map(b=>Math.hypot(a.label.x-b.label.x,a.label.y-b.label.y)));
 const minLabelSpacing=distances.length?Math.min(...distances):0;
 if(!Number.isFinite(minLabelSpacing)||minLabelSpacing<30)throw new Error("District number markers overlap: minimum spacing "+minLabelSpacing);
-const audit={
-  version:"v44",
-  source:"presentation/map_sources/spb_district_boundaries_v42.geojson",
-  source_date:"2026-11-17",
-  crs:"EPSG:32636",
-  license:"ODbL 1.0; attribution: © OpenStreetMap contributors",
-  role:"geographic orientation only; not an analytical unit and not used to aggregate B1 values",
-  map:{width:W,height:H,scale_bar_m:10000,bbox_epsg32636:[minX,minY,maxX,maxY]},
-  label_order:"alphabetical by Russian district name",
-  label_count:labels.length,
-  minimum_marker_spacing_px:Number(minLabelSpacing.toFixed(2)),
-  districts:labels.map(l=>({number:l.i,name:l.name,osm_id:features[l.i-1].properties.osm_id,anchor:[Number(l.point[0].toFixed(1)),Number(l.point[1].toFixed(1))],label:[Number(l.label.x.toFixed(1)),Number(l.label.y.toFixed(1))],leader_line:Math.hypot(...l.label.off)>5}))
-};
-const auditPath=path.join(here,"district_locator_audit_v44.json");
 fs.mkdirSync(path.dirname(output),{recursive:true});
 fs.writeFileSync(output,svg,"utf8");
-fs.writeFileSync(auditPath,JSON.stringify(audit,null,2)+"\\n","utf8");
-console.log(JSON.stringify({output,auditPath,feature_count:features.length,label_count:labels.length,minLabelSpacing:Number(minLabelSpacing.toFixed(2))}));
+console.log(JSON.stringify({output,feature_count:features.length,label_count:labels.length,minLabelSpacing:Number(minLabelSpacing.toFixed(2))}));
