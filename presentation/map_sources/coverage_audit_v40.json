@@ -96,14 +96,21 @@
     }
   },
   "outputs": [
-    "programming_states_b1.svg",
-    "programming_delta_b1.svg",
-    "art_states_b1.svg",
-    "art_delta_b1.svg",
-    "network_coverage_b1.svg"
+    "programming_states_b1.svgz",
+    "programming_delta_b1.svgz",
+    "art_states_b1.svgz",
+    "art_delta_b1.svgz",
+    "network_coverage_b1.svgz"
+  ],
+  "png_outputs": [
+    "programming_states_b1.png",
+    "programming_delta_b1.png",
+    "art_states_b1.png",
+    "art_delta_b1.png",
+    "network_coverage_b1.png"
   ],
   "map_class_counts": {
-    "programming_states_b1.svg": {
+    "programming_states_b1.svgz": {
       "low": 1020,
       "only13": 459,
       "neither": 749,
@@ -112,7 +119,7 @@
       "tie": 8,
       "nocover": 64
     },
-    "programming_delta_b1.svg": {
+    "programming_delta_b1.svgz": {
       "low": 1020,
       "d3": 709,
       "d2": 971,
@@ -121,7 +128,7 @@
       "d0": 6,
       "nocover": 64
     },
-    "art_states_b1.svg": {
+    "art_states_b1.svgz": {
       "low": 1020,
       "both": 1818,
       "only7": 113,
@@ -130,7 +137,7 @@
       "tie": 6,
       "nocover": 64
     },
-    "art_delta_b1.svg": {
+    "art_delta_b1.svgz": {
       "low": 1020,
       "d0": 864,
       "d1": 549,
@@ -139,7 +146,7 @@
       "nocover": 64,
       "d4": 7
     },
-    "network_coverage_b1.svg": {
+    "network_coverage_b1.svgz": {
       "full": 3265,
       "none": 64,
       "partial": 1
