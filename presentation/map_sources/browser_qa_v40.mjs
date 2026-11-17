@@ -9,8 +9,8 @@ const outputDir = path.join(root, "presentation", "browser_qa_v40");
 await fs.mkdir(outputDir, { recursive: true });
 const speechPath = path.join(root, "presentation", "speaker_script_v12.md");
 const speechText = await fs.readFile(speechPath, "utf8");
-const speechLines = speechText.split(/\\r?\\n/).filter(line => /^\\d+\\.\\s/.test(line));
-const speechWordCounts = speechLines.map(line => line.trim().split(/\\s+/).length);
+const speechLines = speechText.split(/\r?\n/).filter(line => /^\d+\.\s/.test(line));
+const speechWordCounts = speechLines.map(line => line.trim().split(/\s+/).length);
 const speechOverLimit = speechWordCounts
   .map((words, index) => ({ slide: index + 1, words }))
   .filter(item => item.words > 45);
