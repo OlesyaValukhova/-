@@ -14,9 +14,9 @@
 
 Повторная генерация с укороченными заголовками выполнена [GitHub Actions run #5](https://github.com/OlesyaValukhova/-/actions/runs/43996829089); все проверки карт прошли.
 
-- `assets_v40/programming_states_b1.svg` и `art_states_b1.svg` — модальные возрастные состояния.
-- `programming_delta_b1.svg` и `art_delta_b1.svg` — квартальная медиана парной разницы.
-- `network_coverage_b1.svg` — диагностика сетевого покрытия.
+- `assets_v40/programming_states_b1.png` (PNG) + `programming_states_b1.svgz` (vector source) и `art_states_b1.png` + `art_states_b1.svgz` — модальные возрастные состояния.
+- `programming_delta_b1.png` и `art_delta_b1.png` (SVGZ-исходники рядом) — квартальная медиана парной разницы.
+- `network_coverage_b1.png` + `network_coverage_b1.svgz` — диагностика сетевого покрытия.
 - `paired_delta_programming_art_b1.svg` и PNG-превью — сопоставление двух направлений в одной легенде.
 - Все карты повторно построены GitHub Actions из `blocks_v22.json.gz.b64`, `b1_81.csv` и `b1_38.csv`; маршрутизация не запускалась.
 
