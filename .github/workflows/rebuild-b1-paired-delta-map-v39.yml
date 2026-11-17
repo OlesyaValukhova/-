@@ -1,0 +1,44 @@
+name: Rebuild and validate paired B1 map v39
+
+on:
+  push:
+    branches:
+      - codex/presentation-map-rebuild-v39
+    paths:
+      - 'presentation/map_sources/build_b1_paired_delta_map_v39.py'
+      - 'presentation/map_sources/verify_paired_delta_map_v39.py'
+      - 'presentation/map_sources/blocks_v22.json.gz.b64'
+      - 'presentation/map_sources/b1_81.csv'
+      - 'presentation/map_sources/b1_38.csv'
+      - '.github/workflows/rebuild-b1-paired-delta-map-v39.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    if: ${{ !contains(github.event.head_commit.message, 'Build B1 paired map v39') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip pandas matplotlib
+      - name: Rebuild map from BlocksNet geometry and B1 tables
+        run: python presentation/map_sources/build_b1_paired_delta_map_v39.py
+      - name: Validate map, legend and data audit
+        run: python presentation/map_sources/verify_paired_delta_map_v39.py
+      - name: Commit generated assets and audit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add presentation/assets_v39/paired_delta_programming_art_b1.svg presentation/assets_v39/paired_delta_programming_art_b1_preview.png presentation/map_sources/paired_delta_map_audit_v39.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Build B1 paired map v39"
+            git push origin HEAD:${GITHUB_REF_NAME}
+          fi
