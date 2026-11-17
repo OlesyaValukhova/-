@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Rebuild vector B1 maps from existing BlocksNet geometry and block CSVs.
+"""Rebuild compressed vector sources and high-resolution PNG B1 maps from BlocksNet and B1 CSVs.
 
 No routing is performed. Run from any working directory:
     python presentation/map_sources/maps_b1_v24.py
@@ -298,10 +298,15 @@ def render_map(kind, direction, slug, df, features, bounds, summary):
     fig.text(0.68, 0.055, note, fontsize=8.5, color="#64737C", wrap=True)
     fig.text(0.02, 0.02, "Санкт-Петербург · BlocksNet · EPSG:32636 · B1 · пешком, 30 минут · Navigator, 09.11.2026",
              fontsize=8, color="#7A858A")
-    out = ASSET_DIR / (f"{slug}_states_b1.svg" if kind == "state" else f"{slug}_delta_b1.svg" if kind == "delta" else "network_coverage_b1.svg")
-    fig.savefig(out, format="svg", facecolor="white")
+    svg_path = ASSET_DIR / (f"{slug}_states_b1.svg" if kind == "state" else f"{slug}_delta_b1.svg" if kind == "delta" else "network_coverage_b1.svg")
+    svgz_path = svg_path.with_suffix(".svgz")
+    png_path = svg_path.with_suffix(".png")
+    fig.savefig(svg_path, format="svg", facecolor="white")
+    svgz_path.write_bytes(gzip.compress(svg_path.read_bytes(), compresslevel=9, mtime=0))
+    svg_path.unlink()
+    fig.savefig(png_path, dpi=180, facecolor="white")
     plt.close(fig)
-    return out.name, dict(counts)
+    return svgz_path.name, dict(counts)
 
 def main():
     features = load_geometry()
@@ -325,6 +330,7 @@ def main():
                               "covered_and_assigned": EXPECTED_COVERED_ASSIGNED},
         "directions": summaries,
         "outputs": [x[0] for x in outputs],
+        "png_outputs": [x[0].replace(".svgz", ".png") for x in outputs],
         "map_class_counts": {x[0]: x[1] for x in outputs},
         "limitations": [
             "N is the number of unique published Navigator coordinates, not groups, available places or participants.",
