@@ -15,6 +15,7 @@ from pathlib import Path
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+plt.rcParams["svg.fonttype"] = "none"
 import pandas as pd
 from matplotlib.collections import PatchCollection
 from matplotlib.patches import Patch
@@ -242,8 +243,13 @@ def render(features, frames, summaries):
              "Серые классы: 1–2 валидные точки или отсутствие сетевого покрытия. "
              "Квартальный цвет не описывает каждый адрес; N — опубликованные координаты Navigator.",
              fontsize=8, color="#748187")
-    fig.savefig(OUT / "paired_delta_programming_art_b1.svg", format="svg", facecolor="white")
-    fig.savefig(OUT / "paired_delta_programming_art_b1_preview.png", dpi=180, facecolor="white")
+    svg_path = OUT / "paired_delta_programming_art_b1.svg"
+    svgz_path = OUT / "paired_delta_programming_art_b1.svgz"
+    png_path = OUT / "paired_delta_programming_art_b1_preview.png"
+    fig.savefig(svg_path, format="svg", facecolor="white")
+    svgz_path.write_bytes(gzip.compress(svg_path.read_bytes(), compresslevel=9, mtime=0))
+    svg_path.unlink()
+    fig.savefig(png_path, dpi=180, facecolor="white")
     plt.close(fig)
 
 
@@ -261,8 +267,8 @@ def main():
         "feature_count": len(features),
         "geometry_inventory": inventory,
         "rendered_files": {
-            "svg": {"path": "assets_v40/paired_delta_programming_art_b1.svg",
-                    "bytes": (OUT / "paired_delta_programming_art_b1.svg").stat().st_size},
+            "svgz": {"path": "assets_v40/paired_delta_programming_art_b1.svgz",
+                    "bytes": (OUT / "paired_delta_programming_art_b1.svgz").stat().st_size},
             "png_preview": {"path": "assets_v40/paired_delta_programming_art_b1_preview.png",
                             "bytes": (OUT / "paired_delta_programming_art_b1_preview.png").stat().st_size},
         },
