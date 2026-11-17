@@ -8,6 +8,7 @@ on:
       - 'presentation/age_accessibility_b1_v44.html'
       - 'presentation/speaker_script_v15.md'
       - 'presentation/assets_v44/district_locator_v44.svg'
+      - 'presentation/map_sources/district_locator_audit_v44.json'
       - 'presentation/map_sources/spb_district_boundaries_v42.geojson'
       - 'presentation/map_sources/build_district_locator_v44.mjs'
       - 'presentation/map_sources/browser_qa_v44.mjs'
