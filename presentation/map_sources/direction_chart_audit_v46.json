@@ -2,6 +2,7 @@
   "version": "v46",
   "source_file": "presentation/map_sources/b1-direction-summary.csv",
   "source_blob_sha": "529b7a5b18886f0e9b6e40c9b71d653ea0d2e572",
+  "source_sha256": "a778faca1c31c92c691867d1e9184e2dcda3a1a40678e869037543b8144cdef0",
   "scenario": {
     "name": "B1",
     "travel_mode": "walking",
@@ -336,6 +337,5 @@
     "The denominator is 30,224 network-covered residential origins for each direction; quarter assignment is not required.",
     "A reachable coordinate with an age-eligible catalogue card is a published-offer proxy, not a verified active group, vacancy, participant or demand measure.",
     "The chart compares catalogue/network evidence only; it does not measure route safety, independent mobility or accompaniment."
-  ],
-  "source_sha256": "a778faca1c31c92c691867d1e9184e2dcda3a1a40678e869037543b8144cdef0"
+  ]
 }
