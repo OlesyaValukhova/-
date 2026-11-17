@@ -22,6 +22,9 @@
 
 ## Проверка
 
+- Браузерная проверка всех 20 слайдов: [GitHub Actions run #11](https://github.com/OlesyaValukhova/-/actions/runs/43996944887) — success.
+- [Артефакт со скриншотами 20 слайдов и report.json](https://github.com/OlesyaValukhova/-/actions/runs/43996944887/artifacts/14290920599).
+
 Workflow `Browser QA presentation v40` проверяет:
 - запуск презентации и переход по всем 20 слайдам;
 - наличие заголовка и текста речи на каждом слайде;
