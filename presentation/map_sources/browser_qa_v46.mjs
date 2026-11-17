@@ -85,7 +85,7 @@ if (Math.abs(locatorAudit.minimum_marker_spacing_px - locatorMinSpacing) > 0.05)
 if (locatorSvgText.includes("NaN")) failures.push("Locator SVG contains invalid NaN coordinates");
 if (!locatorHasAttribution) failures.push("Locator SVG is missing OpenStreetMap / ODbL attribution");
 if (locatorMinSpacing < 30) failures.push(`Locator district markers overlap: minimum spacing ${locatorMinSpacing}`);
-if (speechVersion !== "16") failures.push(`Expected speaker_script_v17.md header, got: ${speechHeader || "missing"}`);
+if (speechVersion !== "17") failures.push(`Expected speaker_script_v17.md header, got: ${speechHeader || "missing"}`);
 if (JSON.stringify(speechSlideNumbers) !== JSON.stringify(Array.from({length: 20}, (_, i) => i + 1))) {
   failures.push(`Speaker script numbering must be exactly 1–20, got: ${JSON.stringify(speechSlideNumbers)}`);
 }
