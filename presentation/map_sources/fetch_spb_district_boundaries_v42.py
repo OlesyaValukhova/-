@@ -110,7 +110,25 @@ def main() -> None:
     if missing_raw:
         raise ValueError(f"Overpass response is missing relation IDs: {missing_raw}")
 
-    converted = osm2geojson.json2geojson(payload, raise_on_failure=True)
+    conversion_payload = json.loads(json.dumps(payload))
+    removed_subarea_members = 0
+    for element in conversion_payload.get("elements", []):
+        if element.get("type") != "relation" or int(element.get("id", -1)) not in EXPECTED:
+            continue
+        members = element.get("members", [])
+        retained = []
+        for member in members:
+            if member.get("type") == "relation" and member.get("role") == "subarea":
+                removed_subarea_members += 1
+            else:
+                retained.append(member)
+        element["members"] = retained
+
+    # Subarea relation members are administrative subdivisions, not boundary rings.
+    # Their outer way geometries remain in the raw Overpass response and define the
+    # parent district polygon; dropping only these nested references lets the
+    # converter assemble the parent multipolygon without changing its boundary.
+    converted = osm2geojson.json2geojson(conversion_payload, raise_on_failure=True)
     transformer = Transformer.from_crs("EPSG:4326", TARGET_CRS, always_xy=True)
     features_by_id = {}
 
@@ -187,6 +205,11 @@ def main() -> None:
         "license": "ODbL 1.0; attribution: © OpenStreetMap contributors",
         "crs": TARGET_CRS,
         "feature_count": len(features),
+        "conversion_preprocessing": {
+            "removed_nested_subarea_relation_members": removed_subarea_members,
+            "raw_overpass_response_preserved": True,
+            "reason": "Nested subarea relation references are not polygon rings; parent outer way geometries are retained.",
+        },
         "relation_ids": sorted(features_by_id),
         "districts": [
             {
