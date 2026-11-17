@@ -1,0 +1,186 @@
+{
+  "version": "v44",
+  "source": "presentation/map_sources/spb_district_boundaries_v42.geojson",
+  "source_date": "2026-11-17",
+  "crs": "EPSG:32636",
+  "license": "ODbL 1.0; attribution: © OpenStreetMap contributors",
+  "role": "geographic orientation only; not an analytical unit and not used to aggregate B1 values",
+  "map": {
+    "width": 760,
+    "height": 660,
+    "scale_bar_m": 10000,
+    "bbox_epsg32636": [
+      301850.7865154279,
+      6613745.101713602,
+      374121.65220170823,
+      6683247.320204681
+    ]
+  },
+  "label_order": "alphabetical by Russian district name",
+  "label_count": 18,
+  "minimum_marker_spacing_px": 34.28,
+  "districts": [
+    {
+      "number": 1,
+      "name": "Адмиралтейский район",
+      "osm_id": 1114193,
+      "label_position_svg_px": [
+        474.9,
+        358.5
+      ]
+    },
+    {
+      "number": 2,
+      "name": "Василеостровский район",
+      "osm_id": 1114252,
+      "label_position_svg_px": [
+        447.5,
+        331.8
+      ]
+    },
+    {
+      "number": 3,
+      "name": "Выборгский район",
+      "osm_id": 1114354,
+      "label_position_svg_px": [
+        459.8,
+        210.7
+      ]
+    },
+    {
+      "number": 4,
+      "name": "Калининский район",
+      "osm_id": 1114806,
+      "label_position_svg_px": [
+        525.7,
+        276.4
+      ]
+    },
+    {
+      "number": 5,
+      "name": "Кировский район",
+      "osm_id": 1114809,
+      "label_position_svg_px": [
+        445.1,
+        401.4
+      ]
+    },
+    {
+      "number": 6,
+      "name": "Колпинский район",
+      "osm_id": 337424,
+      "label_position_svg_px": [
+        615.8,
+        501.8
+      ]
+    },
+    {
+      "number": 7,
+      "name": "Красногвардейский район",
+      "osm_id": 1114895,
+      "label_position_svg_px": [
+        557,
+        307.6
+      ]
+    },
+    {
+      "number": 8,
+      "name": "Красносельский район",
+      "osm_id": 363103,
+      "label_position_svg_px": [
+        391.4,
+        468.1
+      ]
+    },
+    {
+      "number": 9,
+      "name": "Кронштадтский район",
+      "osm_id": 1115082,
+      "label_position_svg_px": [
+        210.8,
+        261.8
+      ]
+    },
+    {
+      "number": 10,
+      "name": "Курортный район",
+      "osm_id": 1115366,
+      "label_position_svg_px": [
+        286.5,
+        117
+      ]
+    },
+    {
+      "number": 11,
+      "name": "Московский район",
+      "osm_id": 338636,
+      "label_position_svg_px": [
+        476,
+        448.3
+      ]
+    },
+    {
+      "number": 12,
+      "name": "Невский район",
+      "osm_id": 368287,
+      "label_position_svg_px": [
+        555,
+        396.3
+      ]
+    },
+    {
+      "number": 13,
+      "name": "Петроградский район",
+      "osm_id": 1114905,
+      "label_position_svg_px": [
+        492.6,
+        310.2
+      ]
+    },
+    {
+      "number": 14,
+      "name": "Петродворцовый район",
+      "osm_id": 367375,
+      "label_position_svg_px": [
+        265.8,
+        386.9
+      ]
+    },
+    {
+      "number": 15,
+      "name": "Приморский район",
+      "osm_id": 1115367,
+      "label_position_svg_px": [
+        424.2,
+        258.5
+      ]
+    },
+    {
+      "number": 16,
+      "name": "Пушкинский район",
+      "osm_id": 338635,
+      "label_position_svg_px": [
+        517.9,
+        546.5
+      ]
+    },
+    {
+      "number": 17,
+      "name": "Фрунзенский район",
+      "osm_id": 369514,
+      "label_position_svg_px": [
+        520,
+        414.3
+      ]
+    },
+    {
+      "number": 18,
+      "name": "Центральный район",
+      "osm_id": 1114902,
+      "label_position_svg_px": [
+        506.8,
+        341.4
+      ]
+    }
+  ]
+}
