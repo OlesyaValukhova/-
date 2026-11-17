@@ -6,6 +6,7 @@ on:
       - codex/presentation-browser-qa-v40
     paths:
       - 'presentation/age_accessibility_b1_v40.html'
+      - 'presentation/speaker_script_v12.md'
       - 'presentation/assets_v32/**'
       - 'presentation/assets_v35/**'
       - 'presentation/assets_v38/**'
