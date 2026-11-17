@@ -1,0 +1,42 @@
+name: Browser QA presentation v41
+
+on:
+  push:
+    branches:
+      - codex/presentation-normative-caveat-v41
+    paths:
+      - 'presentation/age_accessibility_b1_v41.html'
+      - 'presentation/speaker_script_v13.md'
+      - 'presentation/map_sources/browser_qa_v41.mjs'
+      - '.github/workflows/browser-qa-v41.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: presentation-browser-qa-v41-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  render-and-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Playwright Chromium
+        run: |
+          npm init -y
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+      - name: Render and validate all slides
+        run: node presentation/map_sources/browser_qa_v41.mjs
+      - name: Upload slide screenshots and QA report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: presentation-v41-browser-qa
+          path: presentation/browser_qa_v41/
+          retention-days: 7
