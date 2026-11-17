@@ -160,7 +160,7 @@ try {
     width: img.naturalWidth,
     height: img.naturalHeight,
   })));
-  for (const image of allImages) {
+  for (const image of documentImages) {
     if (!image.loaded) failures.push(`document image failed to load: ${image.src}`);
     if (!image.alt) failures.push(`document image has no alt text: ${image.src}`);
   }
