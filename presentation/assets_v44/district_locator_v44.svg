@@ -9,5 +9,5 @@
 <text x="34" y="616" font-size="13">10 км</text>
 <line x1="34" y1="626" x2="120.90370079014563" y2="626" stroke="#315B78" stroke-width="3"/>
 </g>
-<text x="34" y="646" font-family="Arial,sans-serif" font-size="10" fill="#66757C">EPSG:32636 · контекстный слой · OSM, 17.11.2026</text>
+<text x="34" y="646" font-family="Arial,sans-serif" font-size="10" fill="#66757C">OSM · 17.11.2026 · EPSG:32636 · © OpenStreetMap contributors · ODbL 1.0</text>
 </svg>
