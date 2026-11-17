@@ -149,12 +149,12 @@ try {
       }
     }
     if (n === 3) {
-      if (!state.bodyText.includes("Граница применения")) slideFailures.push("missing SP 460 scope caveat");
+      if (!state.bodyText.includes("перечень добровольного применения") || !state.bodyText.includes("обязательность этих пунктов отдельно не подтверждена")) slideFailures.push("missing SP 460 scope / voluntary-list caveat");
       if (!state.bodyText.includes("обязательность этих пунктов отдельно не подтверждена")) slideFailures.push("missing legal-status qualification");
       if (!state.bodyText.includes("однопрофильные общеразвивающие")) slideFailures.push("microdistrict program type is underspecified");
       if (!state.bodyText.includes("транспортом")) slideFailures.push("district transport-access wording is missing");
       if (!state.note.includes("B1 использует отдельный порог")) slideFailures.push("speaker note does not distinguish B1 from 750 m");
-      if (!state.detail.includes("действующего реестра требований")) slideFailures.push("extended note omits unresolved registry status");
+      if (!state.detail.includes("реестр требований") || !state.detail.includes("обязательность именно этих пунктов отдельно не подтверждена")) slideFailures.push("extended note omits registry-status caveat");
     }
     if (!state.title) slideFailures.push("empty title");
     if (state.note.length < 20) slideFailures.push("missing/short speaker note");
