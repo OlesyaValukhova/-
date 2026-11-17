@@ -1,0 +1,41 @@
+name: Browser QA presentation v40
+
+on:
+  push:
+    branches:
+      - codex/presentation-browser-qa-v40
+    paths:
+      - 'presentation/age_accessibility_b1_v40.html'
+      - 'presentation/assets_v32/**'
+      - 'presentation/assets_v35/**'
+      - 'presentation/assets_v38/**'
+      - 'presentation/assets_v39/**'
+      - 'presentation/map_sources/browser_qa_v40.mjs'
+      - '.github/workflows/browser-qa-v40.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  render-and-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Playwright Chromium
+        run: |
+          npm init -y
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+      - name: Render and validate all slides
+        run: node presentation/map_sources/browser_qa_v40.mjs
+      - name: Upload slide screenshots and QA report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: presentation-v40-browser-qa
+          path: presentation/browser_qa_v40/
+          retention-days: 7
