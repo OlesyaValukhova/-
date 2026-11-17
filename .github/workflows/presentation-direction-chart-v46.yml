@@ -1,0 +1,59 @@
+name: B1 direction chart v46 rebuild and browser QA
+
+on:
+  push:
+    branches:
+      - codex/presentation-direction-chart-v46
+    paths:
+      - 'presentation/age_accessibility_b1_v46.html'
+      - 'presentation/speaker_script_v17.md'
+      - 'presentation/assets_v46/directions_dumbbell_faceted_b1.svg'
+      - 'presentation/map_sources/b1-direction-summary.csv'
+      - 'presentation/map_sources/direction_chart_audit_v46.json'
+      - 'presentation/map_sources/build_direction_chart_v46.mjs'
+      - 'presentation/map_sources/browser_qa_v46.mjs'
+      - '.github/workflows/presentation-direction-chart-v46.yml'
+  pull_request:
+    branches:
+      - codex/presentation-evidence-boundary-v45
+    paths:
+      - 'presentation/age_accessibility_b1_v46.html'
+      - 'presentation/speaker_script_v17.md'
+      - 'presentation/assets_v46/directions_dumbbell_faceted_b1.svg'
+      - 'presentation/map_sources/direction_chart_audit_v46.json'
+      - 'presentation/map_sources/build_direction_chart_v46.mjs'
+      - 'presentation/map_sources/browser_qa_v46.mjs'
+      - '.github/workflows/presentation-direction-chart-v46.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  rebuild-and-browser-qa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Rebuild faceted direction chart from the published B1 CSV
+        run: node presentation/map_sources/build_direction_chart_v46.mjs
+      - name: Verify deterministic chart and audit
+        run: git diff --exit-code -- presentation/assets_v46/directions_dumbbell_faceted_b1.svg presentation/map_sources/direction_chart_audit_v46.json
+      - name: Install Playwright Chromium
+        run: |
+          npm init -y
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+      - name: Render all slides and validate v17 speaker script
+        run: node presentation/map_sources/browser_qa_v46.mjs
+      - name: Upload screenshots and QA report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: presentation-v46-browser-qa
+          path: presentation/browser_qa_v46/
+          retention-days: 7

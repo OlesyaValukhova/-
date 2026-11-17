@@ -1,0 +1,340 @@
+{
+  "version": "v46",
+  "source_file": "presentation/map_sources/b1-direction-summary.csv",
+  "source_blob_sha": "529b7a5b18886f0e9b6e40c9b71d653ea0d2e572",
+  "scenario": {
+    "name": "B1",
+    "travel_mode": "walking",
+    "threshold_minutes": 30,
+    "ages": [
+      7,
+      13
+    ]
+  },
+  "metric": "100% minus age-specific zero_pct_30min; share of network-covered residential origins with at least one reachable published coordinate",
+  "denominator_per_direction": 30224,
+  "direction_count": 43,
+  "sign_counts": {
+    "age13_higher": 24,
+    "age7_higher": 19,
+    "tie": 0
+  },
+  "delta_range_pp": {
+    "min": -16.98,
+    "max": 47.14
+  },
+  "panel_order": "split by sign of delta; within each panel sorted by absolute delta descending",
+  "panels": {
+    "age13_higher": [
+      {
+        "id": "27",
+        "name": "Военно-патриотические объединения",
+        "age7_pct": 25.66,
+        "age13_pct": 72.8,
+        "delta_pp": 47.14
+      },
+      {
+        "id": "76",
+        "name": "Спортивный туризм",
+        "age7_pct": 13.93,
+        "age13_pct": 54.62,
+        "delta_pp": 40.69
+      },
+      {
+        "id": "26",
+        "name": "Школа актива и/или РДШ",
+        "age7_pct": 19.37,
+        "age13_pct": 55.41,
+        "delta_pp": 36.04
+      },
+      {
+        "id": "86",
+        "name": "3D моделирование, прототипирование",
+        "age7_pct": 16.8,
+        "age13_pct": 51.68,
+        "delta_pp": 34.88
+      },
+      {
+        "id": "22",
+        "name": "Волонтерская работа",
+        "age7_pct": 26.99,
+        "age13_pct": 59.77,
+        "delta_pp": 32.78
+      },
+      {
+        "id": "34",
+        "name": "Химия",
+        "age7_pct": 17.23,
+        "age13_pct": 45.01,
+        "delta_pp": 27.78
+      },
+      {
+        "id": "83",
+        "name": "Мультимедиа студии и киностудии",
+        "age7_pct": 42.58,
+        "age13_pct": 69.42,
+        "delta_pp": 26.84
+      },
+      {
+        "id": "75",
+        "name": "Туризм и экология",
+        "age7_pct": 11.05,
+        "age13_pct": 33.16,
+        "delta_pp": 22.11
+      },
+      {
+        "id": "23",
+        "name": "Профессиональная ориентация",
+        "age7_pct": 57.5,
+        "age13_pct": 77.88,
+        "delta_pp": 20.38
+      },
+      {
+        "id": "61",
+        "name": "Настольный теннис",
+        "age7_pct": 25.47,
+        "age13_pct": 44.41,
+        "delta_pp": 18.94
+      },
+      {
+        "id": "77",
+        "name": "Информационные технологии",
+        "age7_pct": 53.79,
+        "age13_pct": 71.54,
+        "delta_pp": 17.75
+      },
+      {
+        "id": "81",
+        "name": "Программирование",
+        "age7_pct": 46.41,
+        "age13_pct": 63.24,
+        "delta_pp": 16.83
+      },
+      {
+        "id": "74",
+        "name": "Туризм и краеведение",
+        "age7_pct": 63.59,
+        "age13_pct": 78.41,
+        "delta_pp": 14.82
+      },
+      {
+        "id": "33",
+        "name": "Физика",
+        "age7_pct": 23.56,
+        "age13_pct": 38.36,
+        "delta_pp": 14.8
+      },
+      {
+        "id": "58",
+        "name": "Легкая атлетика",
+        "age7_pct": 37.14,
+        "age13_pct": 50.72,
+        "delta_pp": 13.58
+      },
+      {
+        "id": "56",
+        "name": "Командные спортивные игры",
+        "age7_pct": 70.71,
+        "age13_pct": 83.27,
+        "delta_pp": 12.56
+      },
+      {
+        "id": "85",
+        "name": "Робототехника",
+        "age7_pct": 56.02,
+        "age13_pct": 66.22,
+        "delta_pp": 10.2
+      },
+      {
+        "id": "31",
+        "name": "Экология",
+        "age7_pct": 56.25,
+        "age13_pct": 62.85,
+        "delta_pp": 6.6
+      },
+      {
+        "id": "28",
+        "name": "Биология",
+        "age7_pct": 50.4,
+        "age13_pct": 56.2,
+        "delta_pp": 5.8
+      },
+      {
+        "id": "55",
+        "name": "Игровые виды спорта",
+        "age7_pct": 76.37,
+        "age13_pct": 80.42,
+        "delta_pp": 4.05
+      },
+      {
+        "id": "54",
+        "name": "Единоборства",
+        "age7_pct": 65.78,
+        "age13_pct": 69.63,
+        "delta_pp": 3.85
+      },
+      {
+        "id": "84",
+        "name": "Моделирование",
+        "age7_pct": 47.52,
+        "age13_pct": 50.19,
+        "delta_pp": 2.67
+      },
+      {
+        "id": "39",
+        "name": "Инструментальное музицирование",
+        "age7_pct": 63.43,
+        "age13_pct": 65.67,
+        "delta_pp": 2.24
+      },
+      {
+        "id": "45",
+        "name": "Цирковое искусство",
+        "age7_pct": 20.06,
+        "age13_pct": 20.48,
+        "delta_pp": 0.42
+      }
+    ],
+    "age7_higher": [
+      {
+        "id": "89",
+        "name": "Шахматы",
+        "age7_pct": 71.67,
+        "age13_pct": 54.69,
+        "delta_pp": -16.98
+      },
+      {
+        "id": "52",
+        "name": "Гимнастика",
+        "age7_pct": 67.39,
+        "age13_pct": 52.95,
+        "delta_pp": -14.44
+      },
+      {
+        "id": "49",
+        "name": "Акробатика",
+        "age7_pct": 38.62,
+        "age13_pct": 25.93,
+        "delta_pp": -12.69
+      },
+      {
+        "id": "67",
+        "name": "Спортивная хореография",
+        "age7_pct": 69.11,
+        "age13_pct": 61.85,
+        "delta_pp": -7.26
+      },
+      {
+        "id": "46",
+        "name": "Эстрадное пение",
+        "age7_pct": 59.21,
+        "age13_pct": 52.5,
+        "delta_pp": -6.71
+      },
+      {
+        "id": "29",
+        "name": "Математические предметы",
+        "age7_pct": 57.03,
+        "age13_pct": 50.35,
+        "delta_pp": -6.68
+      },
+      {
+        "id": "65",
+        "name": "Подвижные спортивные игры",
+        "age7_pct": 69.86,
+        "age13_pct": 64.3,
+        "delta_pp": -5.56
+      },
+      {
+        "id": "51",
+        "name": "Водные виды спорта",
+        "age7_pct": 49.86,
+        "age13_pct": 45.32,
+        "delta_pp": -4.54
+      },
+      {
+        "id": "38",
+        "name": "Изобразительное искусство",
+        "age7_pct": 85.41,
+        "age13_pct": 80.99,
+        "delta_pp": -4.42
+      },
+      {
+        "id": "48",
+        "name": "Декоративно-прикладное искусство",
+        "age7_pct": 86.19,
+        "age13_pct": 81.95,
+        "delta_pp": -4.24
+      },
+      {
+        "id": "44",
+        "name": "Хоровое пение",
+        "age7_pct": 75.31,
+        "age13_pct": 71.18,
+        "delta_pp": -4.13
+      },
+      {
+        "id": "43",
+        "name": "Хореография",
+        "age7_pct": 85.47,
+        "age13_pct": 81.35,
+        "delta_pp": -4.12
+      },
+      {
+        "id": "25",
+        "name": "Социальная адаптация",
+        "age7_pct": 80.35,
+        "age13_pct": 77.29,
+        "delta_pp": -3.06
+      },
+      {
+        "id": "41",
+        "name": "Общие знания",
+        "age7_pct": 85.21,
+        "age13_pct": 82.47,
+        "delta_pp": -2.74
+      },
+      {
+        "id": "24",
+        "name": "Психология",
+        "age7_pct": 51.85,
+        "age13_pct": 49.26,
+        "delta_pp": -2.59
+      },
+      {
+        "id": "60",
+        "name": "Настольные спортивные игры",
+        "age7_pct": 55.5,
+        "age13_pct": 53.23,
+        "delta_pp": -2.27
+      },
+      {
+        "id": "79",
+        "name": "Начальное техническое моделирование",
+        "age7_pct": 48.59,
+        "age13_pct": 46.79,
+        "delta_pp": -1.8
+      },
+      {
+        "id": "90",
+        "name": "Театр",
+        "age7_pct": 78.25,
+        "age13_pct": 77.33,
+        "delta_pp": -0.92
+      },
+      {
+        "id": "47",
+        "name": "Вокальное искусство",
+        "age7_pct": 77.14,
+        "age13_pct": 76.28,
+        "delta_pp": -0.86
+      }
+    ]
+  },
+  "limitations": [
+    "Percentages are calculated separately for each of 43 directions and are not a pooled or citywide weighted share.",
+    "The denominator is 30,224 network-covered residential origins for each direction; quarter assignment is not required.",
+    "A reachable coordinate with an age-eligible catalogue card is a published-offer proxy, not a verified active group, vacancy, participant or demand measure.",
+    "The chart compares catalogue/network evidence only; it does not measure route safety, independent mobility or accompaniment."
+  ]
+}
