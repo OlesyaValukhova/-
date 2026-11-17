@@ -180,6 +180,7 @@ try {
 
     const slideFailures = [];
     const expectedMapAssets = {
+      11: "assets_v46/directions_dumbbell_faceted_b1.svg",
       10: "assets_v44/district_locator_v44.svg",
       12: "assets_v42/programming_states_b1.png",
       13: "assets_v42/art_states_b1.png",
