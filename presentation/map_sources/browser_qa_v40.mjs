@@ -119,6 +119,15 @@ try {
     });
 
     const slideFailures = [];
+    const expectedMapAssets = {
+      12: "assets_v40/programming_states_b1.svg",
+      13: "assets_v40/art_states_b1.svg",
+      15: "assets_v40/paired_delta_programming_art_b1_preview.png",
+      19: "assets_v40/network_coverage_b1.svg",
+    };
+    if (expectedMapAssets[n] && !state.images.some(image => image.src === expectedMapAssets[n])) {
+      slideFailures.push(`expected map asset not used: ${expectedMapAssets[n]}`);
+    }
     if (!state.title) slideFailures.push("empty title");
     if (state.note.length < 20) slideFailures.push("missing/short speaker note");
     if (state.frameBackground !== "rgb(255, 255, 255)") slideFailures.push("frame background is not white");
