@@ -12,7 +12,15 @@ on:
       - 'presentation/map_sources/spb_district_boundaries_v42.geojson'
       - 'presentation/map_sources/build_district_locator_v44.mjs'
       - 'presentation/map_sources/browser_qa_v45.mjs'
-      - '.github/workflows/presentation-district-locator-v44.yml'
+      - '.github/workflows/presentation-evidence-boundary-v45.yml'
+  pull_request:
+    branches:
+      - codex/presentation-district-locator-v44
+    paths:
+      - 'presentation/age_accessibility_b1_v45.html'
+      - 'presentation/speaker_script_v16.md'
+      - 'presentation/map_sources/browser_qa_v45.mjs'
+      - '.github/workflows/presentation-evidence-boundary-v45.yml'
   workflow_dispatch:
 
 permissions:
