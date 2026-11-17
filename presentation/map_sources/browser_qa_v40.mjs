@@ -40,6 +40,7 @@ const failures = [];
 const consoleErrors = [];
 const pageErrors = [];
 const slides = [];
+let documentImages = [];
 
 try {
   const page = await browser.newPage({
@@ -152,7 +153,7 @@ try {
     for (const failure of slideFailures) failures.push(`Slide ${n}: ${failure}`);
   }
 
-  const allImages = await page.locator("img").evaluateAll(images => images.map(img => ({
+  documentImages = await page.locator("img").evaluateAll(images => images.map(img => ({
     src: img.getAttribute("src"),
     loaded: img.complete && img.naturalWidth > 0,
     alt: (img.getAttribute("alt") || "").trim(),
@@ -176,7 +177,7 @@ const report = {
   viewport: "1440x900",
   slide_count: slides.length,
   rendered_slide_count: slides.filter(s => s.status === "passed").length,
-  document_images: allImages,
+  document_images: documentImages,
   page_errors: pageErrors,
   console_errors: consoleErrors,
   failures,
