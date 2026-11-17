@@ -8,6 +8,7 @@ on:
       - 'presentation/age_accessibility_b1_v42.html'
       - 'presentation/speaker_script_v14.md'
       - 'presentation/map_sources/fetch_spb_district_boundaries_v42.py'
+      - 'presentation/map_sources/verify_district_boundaries_v42.py'
       - 'presentation/map_sources/maps_b1_v26.py'
       - 'presentation/map_sources/build_b1_paired_delta_map_v42.py'
       - 'presentation/map_sources/verify_b1_maps_v42.py'
@@ -17,6 +18,12 @@ on:
       - 'presentation/map_sources/b1_38.csv'
       - '.github/workflows/rebuild-b1-maps-v42.yml'
   workflow_dispatch:
+    inputs:
+      refresh_osm:
+        description: "Fetch a fresh OSM snapshot instead of using the committed one"
+        required: false
+        type: boolean
+        default: false
 
 concurrency:
   group: b1-map-context-v42-${{ github.ref }}
@@ -43,8 +50,18 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install pandas matplotlib shapely pyproj osm2geojson==0.3.2
 
-      - name: Fetch and validate 18 OSM district boundaries
-        run: python presentation/map_sources/fetch_spb_district_boundaries_v42.py
+      - name: Fetch OSM snapshot only when missing or refresh is requested
+        env:
+          REFRESH_OSM: ${{ github.event.inputs.refresh_osm || 'false' }}
+        run: |
+          if [ "$REFRESH_OSM" = "true" ] || [ ! -s presentation/map_sources/spb_district_boundaries_v42.geojson ]; then
+            python presentation/map_sources/fetch_spb_district_boundaries_v42.py
+          else
+            echo "Using the committed, validated OSM snapshot."
+          fi
+
+      - name: Verify committed OSM district snapshot offline
+        run: python presentation/map_sources/verify_district_boundaries_v42.py
 
       - name: Rebuild B1 state, delta and coverage maps
         run: python presentation/map_sources/maps_b1_v26.py
