@@ -2,7 +2,7 @@
 
 ## Итог
 
-<badge>GitHub Actions: success</badge>
+**GitHub Actions: success**
 
 - [Pull-request run #4 — success](https://github.com/OlesyaValukhova/-/actions/runs/44010059711).
 - [Push run #3 — success](https://github.com/OlesyaValukhova/-/actions/runs/44010050813).
