@@ -12,6 +12,9 @@ on:
       - 'presentation/map_sources/spb_district_boundaries_v42.geojson'
       - 'presentation/map_sources/build_district_locator_v44.mjs'
       - 'presentation/map_sources/browser_qa_v45.mjs'
+      - 'presentation/README_v45.md'
+      - 'presentation/QA_v45.md'
+      - 'presentation/map_sources/README_v45_evidence_boundary.md'
       - '.github/workflows/presentation-evidence-boundary-v45.yml'
   pull_request:
     branches:
@@ -20,6 +23,9 @@ on:
       - 'presentation/age_accessibility_b1_v45.html'
       - 'presentation/speaker_script_v16.md'
       - 'presentation/map_sources/browser_qa_v45.mjs'
+      - 'presentation/README_v45.md'
+      - 'presentation/QA_v45.md'
+      - 'presentation/map_sources/README_v45_evidence_boundary.md'
       - '.github/workflows/presentation-evidence-boundary-v45.yml'
   workflow_dispatch:
 
