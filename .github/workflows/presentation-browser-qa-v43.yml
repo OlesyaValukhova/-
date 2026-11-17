@@ -1,0 +1,40 @@
+name: Browser QA for B1 presentation v43
+
+on:
+  push:
+    branches:
+      - codex/presentation-script-qa-v43
+    paths:
+      - 'presentation/age_accessibility_b1_v43.html'
+      - 'presentation/speaker_script_v14.md'
+      - 'presentation/map_sources/browser_qa_v43.mjs'
+      - '.github/workflows/presentation-browser-qa-v43.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  browser-qa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install Playwright Chromium
+        run: |
+          npm init -y
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+      - name: Render and validate all 20 slides against speaker script v14
+        run: node presentation/map_sources/browser_qa_v43.mjs
+      - name: Upload slide screenshots and QA report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: presentation-v43-browser-qa
+          path: presentation/browser_qa_v43/
+          retention-days: 7
