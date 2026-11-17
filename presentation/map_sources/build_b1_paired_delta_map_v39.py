@@ -119,7 +119,7 @@ def load_tables(features):
             raise ValueError(f"{key}: unexpected delta classes {dict(classes)}")
         if sum(classes.values()) != EXPECTED_BLOCKS:
             raise ValueError(f"{key}: classes do not sum to 3,330")
-        frames[key] = df.set_index("blocksnet_block_id", verify_integrity=True)
+        frames[key] = df.set_index("blocksnet_block_id")
         negative = classes["lt_minus2"] + classes["minus2_to_zero"]
         positive = classes["zero_to_2"] + classes["gt2"]
         summaries[key] = {
@@ -276,7 +276,7 @@ def main():
             "Blocks with 1-2 valid origins and blocks with no network-covered origins are separate classes.",
         ],
     }
-    (HERE / "paired_delta_map_audit_v38.json").write_text(
+    (HERE / "paired_delta_map_audit_v39.json").write_text(
         json.dumps(audit, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )
     print(json.dumps(audit, ensure_ascii=False))
