@@ -36,7 +36,7 @@ const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="760" height="660" view
 <text x="${barX}" y="${barY-10}" font-size="13">10 км</text>
 <line x1="${barX}" y1="${barY}" x2="${barX+barLen}" y2="${barY}" stroke="#315B78" stroke-width="3"/>
 </g>
-<text x="34" y="646" font-family="Arial,sans-serif" font-size="10" fill="#66757C">EPSG:32636 · контекстный слой · OSM, 17.11.2026</text>
+<text x="34" y="646" font-family="Arial,sans-serif" font-size="10" fill="#66757C">OSM · 17.11.2026 · EPSG:32636 · © OpenStreetMap contributors · ODbL 1.0</text>
 </svg>`;
 const distances=labels.flatMap((a,i)=>labels.slice(i+1).map(b=>Math.hypot(a.label.x-b.label.x,a.label.y-b.label.y)));
 const minLabelSpacing=distances.length?Math.min(...distances):0;
