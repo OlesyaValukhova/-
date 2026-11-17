@@ -1,0 +1,90 @@
+name: Rebuild B1 maps with district context v42
+
+on:
+  push:
+    branches:
+      - codex/presentation-district-context-v42
+    paths:
+      - 'presentation/age_accessibility_b1_v42.html'
+      - 'presentation/speaker_script_v14.md'
+      - 'presentation/map_sources/fetch_spb_district_boundaries_v42.py'
+      - 'presentation/map_sources/maps_b1_v26.py'
+      - 'presentation/map_sources/build_b1_paired_delta_map_v42.py'
+      - 'presentation/map_sources/verify_b1_maps_v42.py'
+      - 'presentation/map_sources/browser_qa_v42.mjs'
+      - 'presentation/map_sources/blocks_v22.json.gz.b64'
+      - 'presentation/map_sources/b1_81.csv'
+      - 'presentation/map_sources/b1_38.csv'
+      - '.github/workflows/rebuild-b1-maps-v42.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: b1-map-context-v42-\${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-qa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: \${{ github.ref_name }}
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install GIS and OSM dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pandas matplotlib shapely pyproj osm2geojson==0.3.2
+
+      - name: Fetch and validate 18 OSM district boundaries
+        run: python presentation/map_sources/fetch_spb_district_boundaries_v42.py
+
+      - name: Rebuild B1 state, delta and coverage maps
+        run: python presentation/map_sources/maps_b1_v26.py
+
+      - name: Rebuild paired programming and art map
+        run: python presentation/map_sources/build_b1_paired_delta_map_v42.py
+
+      - name: Validate maps, data and OSM attribution
+        run: python presentation/map_sources/verify_b1_maps_v42.py
+
+      - name: Install Playwright Chromium
+        run: |
+          npm init -y
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+
+      - name: Render and validate all 20 slides
+        run: node presentation/map_sources/browser_qa_v42.mjs
+
+      - name: Upload slide screenshots and QA report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: presentation-v42-browser-qa
+          path: presentation/browser_qa_v42/
+          retention-days: 7
+
+      - name: Commit OSM source, rebuilt maps and audits
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add presentation/map_sources/spb_districts_overpass_raw_v42.json
+          git add presentation/map_sources/spb_district_boundaries_v42.geojson
+          git add presentation/map_sources/district_boundaries_audit_v42.json
+          git add presentation/map_sources/coverage_audit_v42.json
+          git add presentation/map_sources/paired_delta_map_audit_v42.json
+          git add presentation/assets_v42/*.svgz presentation/assets_v42/*.png
+          if ! git diff --cached --quiet; then
+            git commit -m "Rebuild B1 maps with OSM district context v42"
+            git fetch origin "\${GITHUB_REF_NAME}"
+            git rebase "origin/\${GITHUB_REF_NAME}"
+            git push origin HEAD:"\${GITHUB_REF_NAME}"
+          fi
