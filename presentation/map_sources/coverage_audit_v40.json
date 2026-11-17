@@ -1,0 +1,156 @@
+{
+  "scenario": {
+    "name": "B1",
+    "mode": "walking",
+    "threshold_minutes": 30,
+    "ages": [
+      7,
+      13
+    ],
+    "origin_snap_limit_m": 250,
+    "crs": "EPSG:32636"
+  },
+  "source_date": "2026-11-09",
+  "geometry": {
+    "feature_count": 3330,
+    "crs": "EPSG:32636"
+  },
+  "origin_accounting": {
+    "input_origins": 30611,
+    "network_covered": 30224,
+    "network_uncovered": 387,
+    "assigned_to_blocks": 30609,
+    "unassigned_to_blocks": 2,
+    "covered_and_assigned": 30222
+  },
+  "directions": {
+    "programming": {
+      "n_origins": 30609,
+      "n_valid": 30222,
+      "n_uncovered": 387,
+      "state_counts": {
+        "only13": 459,
+        "low": 1020,
+        "neither": 749,
+        "both": 975,
+        "only7": 55,
+        "tie": 8,
+        "nocover": 64
+      },
+      "delta_bins": {
+        "zero_to_2": 709,
+        "zero": 971,
+        "minus2_to_zero": 207,
+        "gt2": 353,
+        "lt_minus2": 6
+      },
+      "delta_sign": {
+        "positive": 1062,
+        "zero": 971,
+        "negative": 213
+      },
+      "weighted_access_pct": {
+        "age7": 46.4132,
+        "age13": 63.2486
+      },
+      "coverage_classes": {
+        "no_uncovered_origins": 3265,
+        "partial": 1,
+        "all_origins_uncovered": 64
+      }
+    },
+    "art": {
+      "n_origins": 30609,
+      "n_valid": 30222,
+      "n_uncovered": 387,
+      "state_counts": {
+        "both": 1818,
+        "low": 1020,
+        "neither": 283,
+        "only7": 113,
+        "nocover": 64,
+        "only13": 26,
+        "tie": 6
+      },
+      "delta_bins": {
+        "lt_minus2": 864,
+        "minus2_to_zero": 549,
+        "zero_to_2": 229,
+        "zero": 597,
+        "gt2": 7
+      },
+      "delta_sign": {
+        "negative": 1413,
+        "positive": 236,
+        "zero": 597
+      },
+      "weighted_access_pct": {
+        "age7": 85.4047,
+        "age13": 80.9841
+      },
+      "coverage_classes": {
+        "no_uncovered_origins": 3265,
+        "partial": 1,
+        "all_origins_uncovered": 64
+      }
+    }
+  },
+  "outputs": [
+    "programming_states_b1.svg",
+    "programming_delta_b1.svg",
+    "art_states_b1.svg",
+    "art_delta_b1.svg",
+    "network_coverage_b1.svg"
+  ],
+  "map_class_counts": {
+    "programming_states_b1.svg": {
+      "low": 1020,
+      "only13": 459,
+      "neither": 749,
+      "both": 975,
+      "only7": 55,
+      "tie": 8,
+      "nocover": 64
+    },
+    "programming_delta_b1.svg": {
+      "low": 1020,
+      "d3": 709,
+      "d2": 971,
+      "d4": 353,
+      "d1": 207,
+      "d0": 6,
+      "nocover": 64
+    },
+    "art_states_b1.svg": {
+      "low": 1020,
+      "both": 1818,
+      "only7": 113,
+      "only13": 26,
+      "neither": 283,
+      "tie": 6,
+      "nocover": 64
+    },
+    "art_delta_b1.svg": {
+      "low": 1020,
+      "d0": 864,
+      "d1": 549,
+      "d3": 229,
+      "d2": 597,
+      "nocover": 64,
+      "d4": 7
+    },
+    "network_coverage_b1.svg": {
+      "full": 3265,
+      "none": 64,
+      "partial": 1
+    }
+  },
+  "limitations": [
+    "N is the number of unique published Navigator coordinates, not groups, available places or participants.",
+    "The modal state is aggregated from residential origins in each block and requires at least three valid origins.",
+    "The 'both ages' state does not require the same coordinate for both ages.",
+    "A zero paired difference means equal N13 and N7; it can be zero for both ages or equal positive counts.",
+    "The network map is a diagnostic of origin snapping within 250 m, not an accessibility result.",
+    "Uncovered or unassigned origins are excluded from the relevant denominators, not coded as zero."
+  ]
+}

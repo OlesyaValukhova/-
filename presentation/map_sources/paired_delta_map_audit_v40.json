@@ -1,0 +1,99 @@
+{
+  "version": "v40",
+  "source_geometry": "blocks_v22.json.gz.b64",
+  "source_tables": {
+    "programming": "b1_81.csv",
+    "art": "b1_38.csv"
+  },
+  "crs": "EPSG:32636",
+  "feature_count": 3330,
+  "geometry_inventory": {
+    "property_keys": [
+      "blocksnet_block_id"
+    ],
+    "administrative_candidates": {},
+    "geometry_types": {
+      "MultiPolygon": 3330
+    },
+    "bbox_epsg32636": [
+      303029.924680009,
+      6614965.96081315,
+      373261.1303578024,
+      6682850.104207268
+    ]
+  },
+  "rendered_files": {
+    "svg": {
+      "path": "assets_v40/paired_delta_programming_art_b1.svg",
+      "bytes": 7773461
+    },
+    "png_preview": {
+      "path": "assets_v40/paired_delta_programming_art_b1_preview.png",
+      "bytes": 739402
+    }
+  },
+  "scenario": {
+    "name": "B1",
+    "mode": "walking",
+    "threshold_minutes": 30,
+    "ages": [
+      7,
+      13
+    ]
+  },
+  "method": "median of point-level paired differences N13-N7 within each BlocksNet block",
+  "directions": {
+    "programming": {
+      "rows": 3330,
+      "origin_totals": {
+        "n_origins": 30609,
+        "n_valid": 30222,
+        "n_uncovered": 387
+      },
+      "class_counts": {
+        "zero_to_2": 709,
+        "low": 1020,
+        "zero": 971,
+        "minus2_to_zero": 207,
+        "gt2": 353,
+        "lt_minus2": 6,
+        "nocover": 64
+      },
+      "delta_sign": {
+        "negative": 213,
+        "zero": 971,
+        "positive": 1062
+      },
+      "eligible_blocks": 2246
+    },
+    "art": {
+      "rows": 3330,
+      "origin_totals": {
+        "n_origins": 30609,
+        "n_valid": 30222,
+        "n_uncovered": 387
+      },
+      "class_counts": {
+        "lt_minus2": 864,
+        "low": 1020,
+        "minus2_to_zero": 549,
+        "zero_to_2": 229,
+        "zero": 597,
+        "nocover": 64,
+        "gt2": 7
+      },
+      "delta_sign": {
+        "negative": 1413,
+        "zero": 597,
+        "positive": 236
+      },
+      "eligible_blocks": 2246
+    }
+  },
+  "limitations": [
+    "Block medians summarize residential origins and do not imply within-block homogeneity.",
+    "N counts unique published Navigator coordinates, not groups, vacancies or participants.",
+    "A zero difference can occur when both ages have zero reachable coordinates or equal positive counts.",
+    "Blocks with 1-2 valid origins and blocks with no network-covered origins are separate classes."
+  ]
+}
