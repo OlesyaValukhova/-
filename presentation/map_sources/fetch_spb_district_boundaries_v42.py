@@ -5,6 +5,8 @@ The boundaries are cartographic context only. BlocksNet remains the analytical u
 """
 from __future__ import annotations
 
+import base64
+import gzip
 import json
 import time
 from datetime import datetime, timezone
@@ -21,6 +23,7 @@ RAW_PATH = HERE / "spb_districts_overpass_raw_v42.json"
 OUTPUT = HERE / "spb_district_boundaries_v42.geojson"
 AUDIT = HERE / "district_boundaries_audit_v42.json"
 BLOCK_AUDIT = HERE / "paired_delta_map_audit_v40.json"
+BLOCK_GEOMETRY_B64 = HERE / "blocks_v22.json.gz.b64"
 
 # The 18 city districts are listed in the OpenStreetMap Saint Petersburg boundary
 # documentation; the wiki page states that source boundary information comes
@@ -185,9 +188,27 @@ def main() -> None:
     block_audit = json.loads(BLOCK_AUDIT.read_text(encoding="utf-8"))
     block_bbox = block_audit["geometry_inventory"]["bbox_epsg32636"]
     block_box = box(block_bbox[0], block_bbox[1], block_bbox[2], block_bbox[3])
-    overlap_ratio = district_union.intersection(block_box).area / block_box.area
-    if overlap_ratio < 0.50:
-        raise ValueError(f"District boundaries cover only {overlap_ratio:.1%} of BlocksNet bbox")
+    bbox_overlap_ratio = district_union.intersection(block_box).area / block_box.area
+
+    if not BLOCK_GEOMETRY_B64.is_file() or BLOCK_GEOMETRY_B64.stat().st_size == 0:
+        raise FileNotFoundError(f"Missing BlocksNet geometry: {BLOCK_GEOMETRY_B64}")
+    blocks_raw = base64.b64decode(BLOCK_GEOMETRY_B64.read_text(encoding="ascii").strip(), validate=True)
+    blocks_geo = json.loads(gzip.decompress(blocks_raw).decode("utf-8"))
+    blocks_crs = blocks_geo.get("crs", {}).get("properties", {}).get("name")
+    if blocks_crs != "urn:ogc:def:crs:EPSG::32636":
+        raise ValueError(f"Expected BlocksNet EPSG:32636, got {blocks_crs}")
+    block_features = blocks_geo.get("features", [])
+    if len(block_features) != 3330:
+        raise ValueError(f"Expected 3,330 BlocksNet polygons, got {len(block_features)}")
+    blocks_union = unary_union([shape(feature["geometry"]) for feature in block_features])
+    blocks_area = blocks_union.area
+    if blocks_area <= 0:
+        raise ValueError("BlocksNet polygon union has no positive area")
+    polygon_area_overlap_ratio = district_union.intersection(blocks_union).area / blocks_area
+    if polygon_area_overlap_ratio < 0.80:
+        raise ValueError(
+            f"District boundaries cover only {polygon_area_overlap_ratio:.1%} of actual BlocksNet polygon area"
+        )
 
     output = {
         "type": "FeatureCollection",
@@ -221,7 +242,8 @@ def main() -> None:
             for feature in features
         ],
         "geometry_types": sorted({shape(feature["geometry"]).geom_type for feature in features}),
-        "blocksnet_bbox_overlap_ratio": round(overlap_ratio, 6),
+        "blocksnet_bbox_overlap_ratio": round(bbox_overlap_ratio, 6),
+        "blocksnet_polygon_area_overlap_ratio": round(polygon_area_overlap_ratio, 6),
         "role": "cartographic orientation only; not an analytical unit and not used to aggregate B1 values",
         "validation": {
             "all_18_expected_relations_present": True,
