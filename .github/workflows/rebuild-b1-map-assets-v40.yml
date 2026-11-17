@@ -14,6 +14,10 @@ on:
       - 'presentation/map_sources/b1_38.csv'
       - '.github/workflows/rebuild-b1-map-assets-v40.yml'
 
+concurrency:
+  group: b1-map-assets-v40-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: write
 
@@ -46,5 +50,7 @@ jobs:
           git add presentation/assets_v40/*.svgz presentation/assets_v40/*.png presentation/map_sources/coverage_audit_v40.json presentation/map_sources/paired_delta_map_audit_v40.json
           if ! git diff --cached --quiet; then
             git commit -m "Build comparable B1 map assets v40"
-            git push origin HEAD:${GITHUB_REF_NAME}
+            git fetch origin "${GITHUB_REF_NAME}"
+            git rebase "origin/${GITHUB_REF_NAME}"
+            git push origin HEAD:"${GITHUB_REF_NAME}"
           fi
