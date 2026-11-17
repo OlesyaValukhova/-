@@ -188,6 +188,9 @@ try {
   await new Promise(resolve => server.close(resolve));
 }
 
+if (speechLines.length !== 20) failures.push(`Expected 20 numbered speech lines, got ${speechLines.length}`);
+if (speechOverLimit.length) failures.push(`Speech lines exceed 45-word soft limit: ${JSON.stringify(speechOverLimit)}`);
+
 const report = {
   version: "v40",
   viewport: "1440x900",
@@ -207,12 +210,11 @@ console.log(JSON.stringify({
   version: report.version,
   slide_count: report.slide_count,
   passed: report.rendered_slide_count,
+  speech_line_count: report.speech_line_count,
+  speech_max_words: report.speech_max_words,
   failures: report.failures,
   page_errors: report.page_errors,
   console_errors: report.console_errors,
 }, null, 2));
 
-if (speechLines.length !== 20) failures.push(`Expected 20 numbered speech lines, got ${speechLines.length}`);
-if (speechOverLimit.length) failures.push(`Speech lines exceed 45-word soft limit: ${JSON.stringify(speechOverLimit)}`);
-report.failures = failures;
 if (failures.length || pageErrors.length || consoleErrors.length) process.exitCode = 1;
