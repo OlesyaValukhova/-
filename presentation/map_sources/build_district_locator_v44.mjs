@@ -7,6 +7,7 @@ const here=path.dirname(new URL(import.meta.url).pathname);
 const source=path.join(here,"spb_district_boundaries_v42.geojson");
 const output=path.join(here,"..","assets_v44","district_locator_v44.svg");
 const data=JSON.parse(fs.readFileSync(source,"utf8"));
+if(data.crs?.properties?.name!=="EPSG:32636")throw new Error("District source must use EPSG:32636");
 function ringStats(ring){let a2=0,cx=0,cy=0;for(let i=0;i<ring.length-1;i++){const [x1,y1]=ring[i],[x2,y2]=ring[i+1],cr=x1*y2-x2*y1;a2+=cr;cx+=(x1+x2)*cr;cy+=(y1+y2)*cr;}if(Math.abs(a2)<1e-6){const pts=ring.slice(0,-1);return{area:0,x:pts.reduce((s,p)=>s+p[0],0)/pts.length,y:pts.reduce((s,p)=>s+p[1],0)/pts.length};}return{area:Math.abs(a2/2),x:cx/(3*a2),y:cy/(3*a2)};}
 function inRing(p,ring){let inside=false;for(let i=0,j=ring.length-1;i<ring.length;j=i++){const [xi,yi]=ring[i],[xj,yj]=ring[j];if(((yi>p.y)!==(yj>p.y))&&(p.x<(xj-xi)*(p.y-yi)/(yj-yi+1e-20)+xi))inside=!inside;}return inside;}
 function inPolygon(p,poly){if(!inRing(p,poly[0]))return false;for(let i=1;i<poly.length;i++)if(inRing(p,poly[i]))return false;return true;}
@@ -37,5 +38,24 @@ const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="760" height="660" view
 </g>
 <text x="34" y="646" font-family="Arial,sans-serif" font-size="10" fill="#66757C">EPSG:32636 · контекстный слой · OSM, 17.11.2026</text>
 </svg>`;
-fs.mkdirSync(path.dirname(output),{recursive:true});fs.writeFileSync(output,svg,"utf8");
-console.log(JSON.stringify({output,feature_count:features.length,label_count:labels.length}));
+const distances=labels.flatMap((a,i)=>labels.slice(i+1).map(b=>Math.hypot(a.label.x-b.label.x,a.label.y-b.label.y)));
+const minLabelSpacing=distances.length?Math.min(...distances):0;
+if(!Number.isFinite(minLabelSpacing)||minLabelSpacing<30)throw new Error("District number markers overlap: minimum spacing "+minLabelSpacing);
+const audit={
+  version:"v44",
+  source:"presentation/map_sources/spb_district_boundaries_v42.geojson",
+  source_date:"2026-11-17",
+  crs:"EPSG:32636",
+  license:"ODbL 1.0; attribution: © OpenStreetMap contributors",
+  role:"geographic orientation only; not an analytical unit and not used to aggregate B1 values",
+  map:{width:W,height:H,scale_bar_m:10000,bbox_epsg32636:[minX,minY,maxX,maxY]},
+  label_order:"alphabetical by Russian district name",
+  label_count:labels.length,
+  minimum_marker_spacing_px:Number(minLabelSpacing.toFixed(2)),
+  districts:labels.map(l=>({number:l.i,name:l.name,osm_id:features[l.i-1].properties.osm_id,anchor:[Number(l.point[0].toFixed(1)),Number(l.point[1].toFixed(1))],label:[Number(l.label.x.toFixed(1)),Number(l.label.y.toFixed(1))],leader_line:Math.hypot(...l.label.off)>5}))
+};
+const auditPath=path.join(here,"district_locator_audit_v44.json");
+fs.mkdirSync(path.dirname(output),{recursive:true});
+fs.writeFileSync(output,svg,"utf8");
+fs.writeFileSync(auditPath,JSON.stringify(audit,null,2)+"\\n","utf8");
+console.log(JSON.stringify({output,auditPath,feature_count:features.length,label_count:labels.length,minLabelSpacing:Number(minLabelSpacing.toFixed(2))}));
