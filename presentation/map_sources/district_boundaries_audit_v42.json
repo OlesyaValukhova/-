@@ -1,0 +1,159 @@
+{
+  "version": "v42",
+  "retrieved_at_utc": "2026-11-17T02:36:06.873635+00:00",
+  "source": "OpenStreetMap administrative boundary relations; relation IDs documented in OSM Wiki",
+  "source_documentation": "https://wiki.openstreetmap.org/wiki/RU:%D0%A1%D0%B0%D0%BD%D0%BA%D1%82-%D0%9F%D0%B5%D1%82%D0%B5%D1%80%D0%B1%D1%83%D1%80%D0%B3/%D0%A0%D0%B0%D0%B9%D0%BE%D0%BD%D1%8B",
+  "license": "ODbL 1.0; attribution: © OpenStreetMap contributors",
+  "crs": "EPSG:32636",
+  "feature_count": 18,
+  "conversion_preprocessing": {
+    "removed_nested_subarea_relation_members": 111,
+    "raw_overpass_response_preserved": true,
+    "reason": "Nested subarea relation references are not polygon rings; parent outer way geometries are retained."
+  },
+  "relation_ids": [
+    337424,
+    338635,
+    338636,
+    363103,
+    367375,
+    368287,
+    369514,
+    1114193,
+    1114252,
+    1114354,
+    1114806,
+    1114809,
+    1114895,
+    1114902,
+    1114905,
+    1115082,
+    1115366,
+    1115367
+  ],
+  "districts": [
+    {
+      "osm_id": 1114193,
+      "name": "Адмиралтейский район",
+      "admin_level": "5",
+      "source_url": "https://www.openstreetmap.org/relation/1114193"
+    },
+    {
+      "osm_id": 1114252,
+      "name": "Василеостровский район",
+      "admin_level": "5",
+      "source_url": "https://www.openstreetmap.org/relation/1114252"
+    },
+    {
+      "osm_id": 1114354,
+      "name": "Выборгский район",
+      "admin_level": "5",
+      "source_url": "https://www.openstreetmap.org/relation/1114354"
+    },
+    {
+      "osm_id": 1114806,
+      "name": "Калининский район",
+      "admin_level": "5",
+      "source_url": "https://www.openstreetmap.org/relation/1114806"
+    },
+    {
+      "osm_id": 1114809,
+      "name": "Кировский район",
+      "admin_level": "5",
+      "source_url": "https://www.openstreetmap.org/relation/1114809"
+    },
+    {
+      "osm_id": 337424,
+      "name": "Колпинский район",
+      "admin_level": "5",
+      "source_url": "https://www.openstreetmap.org/relation/337424"
+    },
+    {
+      "osm_id": 1114895,
+      "name": "Красногвардейский район",
+      "admin_level": "5",
+      "source_url": "https://www.openstreetmap.org/relation/1114895"
+    },
+    {
+      "osm_id": 363103,
+      "name": "Красносельский район",
+      "admin_level": "5",
+      "source_url": "https://www.openstreetmap.org/relation/363103"
+    },
+    {
+      "osm_id": 1115082,
+      "name": "Кронштадтский район",
+      "admin_level": "5",
+      "source_url": "https://www.openstreetmap.org/relation/1115082"
+    },
+    {
+      "osm_id": 1115366,
+      "name": "Курортный район",
+      "admin_level": "5",
+      "source_url": "https://www.openstreetmap.org/relation/1115366"
+    },
+    {
+      "osm_id": 338636,
+      "name": "Московский район",
+      "admin_level": "5",
+      "source_url": "https://www.openstreetmap.org/relation/338636"
+    },
+    {
+      "osm_id": 368287,
+      "name": "Невский район",
+      "admin_level": "5",
+      "source_url": "https://www.openstreetmap.org/relation/368287"
+    },
+    {
+      "osm_id": 1114905,
+      "name": "Петроградский район",
+      "admin_level": "5",
+      "source_url": "https://www.openstreetmap.org/relation/1114905"
+    },
+    {
+      "osm_id": 367375,
+      "name": "Петродворцовый район",
+      "admin_level": "5",
+      "source_url": "https://www.openstreetmap.org/relation/367375"
+    },
+    {
+      "osm_id": 1115367,
+      "name": "Приморский район",
+      "admin_level": "5",
+      "source_url": "https://www.openstreetmap.org/relation/1115367"
+    },
+    {
+      "osm_id": 338635,
+      "name": "Пушкинский район",
+      "admin_level": "5",
+      "source_url": "https://www.openstreetmap.org/relation/338635"
+    },
+    {
+      "osm_id": 369514,
+      "name": "Фрунзенский район",
+      "admin_level": "5",
+      "source_url": "https://www.openstreetmap.org/relation/369514"
+    },
+    {
+      "osm_id": 1114902,
+      "name": "Центральный район",
+      "admin_level": "5",
+      "source_url": "https://www.openstreetmap.org/relation/1114902"
+    }
+  ],
+  "geometry_types": [
+    "MultiPolygon"
+  ],
+  "blocksnet_bbox_overlap_ratio": 0.303364,
+  "blocksnet_polygon_area_overlap_ratio": 0.999268,
+  "role": "cartographic orientation only; not an analytical unit and not used to aggregate B1 values",
+  "validation": {
+    "all_18_expected_relations_present": true,
+    "all_admin_level_5": true,
+    "all_administrative_boundaries": true,
+    "all_geometries_valid": true,
+    "all_geometries_projected_to_epsg_32636": true
+  },
+  "output": "spb_district_boundaries_v42.geojson",
+  "output_bytes": 662669
+}
