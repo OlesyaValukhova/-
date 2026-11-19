@@ -26,6 +26,34 @@ results/figures/*
 results/tables/*
 !results/tables/.gitkeep
 
+# Local research artefacts
+#
+# `data/` contains downloaded inputs and intermediate spatial datasets.  They
+# can be regenerated or recovered from their documented sources, so keep them
+# out of Git by default.  Small readme files and placeholders are allowed to
+# document provenance and the expected layout.
+data/**
+!data/**/
+!data/**/README.md
+!data/**/.gitkeep
+
+# Most files in `results/` are reproducible run outputs.  Keep the compact,
+# reviewable research outputs in Git; leave bulky exports, logs, and GIS data
+# local.  Files already committed remain tracked regardless of these rules.
+results/**
+!results/**/
+!results/**/README.md
+!results/**/*.md
+!results/**/*.html
+!results/**/*.svg
+!results/**/*.png
+!results/**/*.jpg
+!results/**/*.jpeg
+!results/**/*.pdf
+
+# Tool environments are installed locally and must never be versioned.
+.tools/
+
 # OS
 .DS_Store
 Thumbs.db
